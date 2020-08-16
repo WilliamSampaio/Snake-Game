@@ -43,23 +43,11 @@ public final class Level extends JPanel implements ActionListener {
         this.screenSize = screenSize;
         this.unitSize = this.screenSize.y / 50;
         this.grid = new Grid(new Point(45, 45), new Color(137, 151, 116));
-        this.snake = new Snake("left", Color.BLACK, Color.DARK_GRAY);
+        this.snake = new Snake("right", Color.BLACK, Color.DARK_GRAY);
         snake.addSegments(new Point(2, 0));
-        snake.addSegments(new Point(3, 0));
-        snake.addSegments(new Point(4, 0));
-        snake.addSegments(new Point(5, 0));
-        snake.addSegments(new Point(6, 0));
-        snake.addSegments(new Point(7, 0));
-        snake.addSegments(new Point(8, 0));
-        snake.addSegments(new Point(9, 0));
-        snake.addSegments(new Point(10, 0));
-        snake.addSegments(new Point(11, 0));
-        snake.addSegments(new Point(12, 0));
-        snake.addSegments(new Point(13, 0));
-        snake.addSegments(new Point(14, 0));
-        snake.addSegments(new Point(15, 0));
-        snake.addSegments(new Point(16, 0));
-        snake.addSegments(new Point(17, 0));
+        snake.addSegments(new Point(1, 0));
+        snake.addSegments(new Point(0, 0));
+
         this.food = new Food(new Point(this.grid.getGridSize().x / 2, this.grid.getGridSize().y / 2));
         this.pause = false;
         this.timer = new Timer(delay, this);
