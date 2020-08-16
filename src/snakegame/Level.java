@@ -343,6 +343,12 @@ public final class Level extends JPanel implements ActionListener {
         snake.addSegments(new Point(9, 0));
         snake.addSegments(new Point(10, 0));
         snake.addSegments(new Point(11, 0));
+        snake.addSegments(new Point(12, 0));
+        snake.addSegments(new Point(13, 0));
+        snake.addSegments(new Point(14, 0));
+        snake.addSegments(new Point(15, 0));
+        snake.addSegments(new Point(16, 0));
+        snake.addSegments(new Point(17, 0));
 
         this.food = new Food(new Point(this.gridSize.x / 2, this.gridSize.y / 2));
 
@@ -357,25 +363,25 @@ public final class Level extends JPanel implements ActionListener {
     public void setFase(int fase) {
         switch (fase) {
             case 1:
-                snake.setImagem(new ImageIcon("./assets/img/nave1.gif").getImage());
+                //snake.setImagem(new ImageIcon("./assets/img/nave1.gif").getImage());
                 setFundo(new ImageIcon("./assets/img/background_fase1.jpg").getImage());
                 this.snake = new Snake("left", Color.BLACK, Color.RED);
                 //inicializaInimigos();
                 break;
             case 2:
-                snake.setImagem(new ImageIcon("./assets/img/nave2.gif").getImage());
+                //snake.setImagem(new ImageIcon("./assets/img/nave2.gif").getImage());
                 setFundo(new ImageIcon("./assets/img/background_fase2.jpg").getImage());
                 this.snake = new Snake("left", Color.BLACK, Color.RED);
                 //inicializaInimigos();
                 break;
             case 3:
-                snake.setImagem(new ImageIcon("./assets/img/nave1.gif").getImage());
+                //snake.setImagem(new ImageIcon("./assets/img/nave1.gif").getImage());
                 setFundo(new ImageIcon("./assets/img/background_fase3.jpg").getImage());
                 this.snake = new Snake("left", Color.BLACK, Color.RED);
                 //inicializaInimigos();
                 break;
             case 4:
-                snake.setImagem(new ImageIcon("./assets/img/nave2.gif").getImage());
+                //snake.setImagem(new ImageIcon("./assets/img/nave2.gif").getImage());
                 setFundo(new ImageIcon("./assets/img/background_fase4.jpg").getImage());
                 this.snake = new Snake("left", Color.BLACK, Color.RED);
                 //inicializaInimigos();
@@ -443,9 +449,9 @@ public final class Level extends JPanel implements ActionListener {
         graficos.drawImage(fundo, fundo1x, fundo1y, null);*/
         switch (emJogo) {
             case ESTADO_EMJOGO:
-                graficos.drawImage(snake.getImagem(), snake.getX(), snake.getY(), snake.getAltura() / 2, snake.getLargura() / 2, this);
+                //graficos.drawImage(snake.getImagem(), snake.getX(), snake.getY(), snake.getAltura() / 2, snake.getLargura() / 2, this);
 
-                List<Missel> misseis = snake.getMisseis();
+                //List<Missel> misseis = snake.getMisseis();
                 /*for (int i = 0; i < misseis.size(); i++) {
 
                     Missel m = (Missel) misseis.get(i);
@@ -586,7 +592,7 @@ public final class Level extends JPanel implements ActionListener {
         }*/
         if (snake.getSegments().get(0).equals(food.getPosition())) {
             snake.eat(this.gridSize);
-            food.newPosition(this.gridSize, snake.getSegments());
+            food.newPosition(this.gridSize);
         } else {
             if (snake.isAlive()) {
                 snake.move(this.gridSize);
@@ -652,7 +658,7 @@ public final class Level extends JPanel implements ActionListener {
         public void keyPressed(KeyEvent e) {
             Graphics g = null;
 
-            if (e.getKeyCode() == KeyEvent.VK_1) {
+            /*if (e.getKeyCode() == KeyEvent.VK_1) {
                 snake.setImagem(new ImageIcon("./assets/img/nave1.gif").getImage());
                 naveAtual = 1;
             }
@@ -660,7 +666,7 @@ public final class Level extends JPanel implements ActionListener {
             if (e.getKeyCode() == KeyEvent.VK_2) {
                 snake.setImagem(new ImageIcon("./assets/img/nave2.gif").getImage());
                 naveAtual = 2;
-            }
+            }*/
 
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 

@@ -243,7 +243,7 @@ public class Food {
         return graficos;
     }
 
-    void newPosition(Point gridSize, List<Point> segments) {
+    void newPosition(Point gridSize/*, List<Point> segments*/) {
 
         Random rand = new Random(); //instance of random class
         int rangeX = gridSize.x;
