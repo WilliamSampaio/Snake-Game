@@ -180,50 +180,6 @@ public class Snake {
                         ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.segments.get(i).y * unitSize) + 3,
                         unitSize - 6,
                         unitSize - 6);
-                /*if (i == 0) {
-                    graficos.fillRect(
-                            ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.segments.get(i).x * unitSize) - 1,
-                            ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.segments.get(i).y * unitSize) - 1,
-                            unitSize + 2,
-                            unitSize + 2);
-                } else*/ /*if (i == this.segments.size() - 5) {
-                    graficos.fillRect(
-                            ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.segments.get(i).x * unitSize) + 2,
-                            ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.segments.get(i).y * unitSize) + 2,
-                            unitSize - 4,
-                            unitSize - 4);
-                } else if (i == this.segments.size() - 4) {
-                    graficos.fillRect(
-                            ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.segments.get(i).x * unitSize) + 2,
-                            ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.segments.get(i).y * unitSize) + 2,
-                            unitSize - 4,
-                            unitSize - 4);
-                } else if (i == this.segments.size() - 3) {
-                    graficos.fillRect(
-                            ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.segments.get(i).x * unitSize) + 3,
-                            ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.segments.get(i).y * unitSize) + 3,
-                            unitSize - 6,
-                            unitSize - 6);
-                } else if (i == this.segments.size() - 2) {
-                    graficos.fillRect(
-                            ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.segments.get(i).x * unitSize) + 4,
-                            ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.segments.get(i).y * unitSize) + 4,
-                            unitSize - 8,
-                            unitSize - 8);
-                } else if (i == this.segments.size() - 1) {
-                    graficos.fillRect(
-                            ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.segments.get(i).x * unitSize) + 5,
-                            ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.segments.get(i).y * unitSize) + 5,
-                            unitSize - 10,
-                            unitSize - 10);
-                } else {
-                    graficos.fillRect(
-                            (((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.segments.get(i).x * unitSize)) + 1,
-                            (((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.segments.get(i).y * unitSize)) + 1,
-                            unitSize - 2,
-                            unitSize - 2);
-                }*/
-
             }
         } else {
             graficos.setColor(this.colorDie);
