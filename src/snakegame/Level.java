@@ -16,37 +16,38 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 /**
- * 
+ *
  * @author William Benjamim Menezes Sampaio
  */
 public final class Level extends JPanel implements ActionListener {
 
+    private Grid grid;
     private Snake snake;
     private Food food;
     private Timer timer;
     private int FPS = 50;
     private Point screenSize;
-    private Point gridSize;
     private int unitSize;
     private int delay = 250;
     private boolean pause;
 
     /**
      * Snake game in Java
+     *
      * @param screenSize Current resolution of the screen
      */
-    public Level(Point screenSize)/* throws LineUnavailableException, IOException */ {
+    public Level(Point screenSize) {
         setFocusable(true);
         setDoubleBuffered(true);
         addKeyListener(new KeyBoardAdapter());
         this.screenSize = screenSize;
         this.unitSize = this.screenSize.y / 50;
-        this.gridSize = new Point(45, 45);
+        this.grid = new Grid(new Point(45, 45), Color.WHITE);
         this.snake = new Snake("left", Color.YELLOW, Color.LIGHT_GRAY);
         snake.addSegments(new Point(2, 0));
         snake.addSegments(new Point(3, 0));
         snake.addSegments(new Point(4, 0));
-        /*snake.addSegments(new Point(5, 0));
+        snake.addSegments(new Point(5, 0));
         snake.addSegments(new Point(6, 0));
         snake.addSegments(new Point(7, 0));
         snake.addSegments(new Point(8, 0));
@@ -58,8 +59,8 @@ public final class Level extends JPanel implements ActionListener {
         snake.addSegments(new Point(14, 0));
         snake.addSegments(new Point(15, 0));
         snake.addSegments(new Point(16, 0));
-        snake.addSegments(new Point(17, 0));*/
-        this.food = new Food(new Point(this.gridSize.x / 2, this.gridSize.y / 2));
+        snake.addSegments(new Point(17, 0));
+        this.food = new Food(new Point(this.grid.getGridSize().x / 2, this.grid.getGridSize().y / 2));
         this.pause = false;
         this.timer = new Timer(delay, this);
         this.timer.start();
@@ -76,15 +77,10 @@ public final class Level extends JPanel implements ActionListener {
 
         graficos.setColor(Color.BLACK);
         graficos.fillRect(0, 0, screenSize.x, screenSize.y);
-        graficos.setColor(Color.DARK_GRAY);
-        graficos.fillRect(
-                (screenSize.x - (gridSize.x * unitSize)) / 2,
-                (screenSize.y - (gridSize.y * unitSize)) / 2,
-                gridSize.x * unitSize,
-                gridSize.y * unitSize);
 
-        snake.paint(graficos, screenSize, gridSize, unitSize);
-        food.paint(graficos, screenSize, gridSize, unitSize);
+        grid.paint(graficos, this.screenSize, this.unitSize);
+        food.paint(graficos, this.screenSize, this.grid.getGridSize(), this.unitSize);
+        snake.paint(graficos, this.screenSize, this.grid.getGridSize(), this.unitSize);
 
         /* switch (emJogo) {
             case ESTADO_EMJOGO:
@@ -207,11 +203,11 @@ public final class Level extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent arg0) {
 
         if (snake.getSegments().get(0).equals(food.getPosition())) {
-            snake.eat(this.gridSize);
-            food.newPosition(this.gridSize, snake.getSegments());
+            snake.eat(this.grid.getGridSize());
+            food.newPosition(this.grid.getGridSize(), snake.getSegments());
         } else {
             if (snake.isAlive()) {
-                snake.move(this.gridSize);
+                snake.move(this.grid.getGridSize());
             }
         }
         repaint();
