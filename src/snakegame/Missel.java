@@ -1,11 +1,11 @@
-package snakegamejava;
+package snakegame;
 
 import java.awt.Image;
 import java.awt.Rectangle;
 
 import javax.swing.ImageIcon;
 
-public class Inimigo {
+public class Missel {
 
     private Image imagem;
     private int x, y;
@@ -13,36 +13,24 @@ public class Inimigo {
     private boolean isVisible;
 
     private static final int LARGURA_TELA = 1180;
-    private static final int VELOCIDADE = 1;
+    private static final int VELOCIDADE = 10;
 
-    private static int contador = 0;
-
-    public Inimigo(int x, int y) {
+    public Missel(int x, int y) {
 
         this.x = x;
         this.y = y;
-
-        
-        
-        if (contador++ % 3 == 0) {
-            setImagem(new ImageIcon("./assets/img/inimigo_2.png").getImage());
-
-        } else {
-            setImagem(new ImageIcon("./assets/img/inimigo_1.png").getImage());
-        }
-
-        this.largura = imagem.getWidth(null) / 2;
-        this.altura = imagem.getHeight(null) / 2;
+        setImagem(new ImageIcon("./assets/img/missel.png").getImage());
+        this.largura = imagem.getWidth(null);
+        this.altura = imagem.getHeight(null);
 
         isVisible = true;
     }
 
     public void mexer() {
 
-        if (this.x < 0) {
-            this.x = LARGURA_TELA;
-        } else {
-            this.x -= VELOCIDADE;
+        this.x += VELOCIDADE;
+        if (this.x > LARGURA_TELA) {
+            isVisible = false;
         }
     }
 
@@ -92,14 +80,6 @@ public class Inimigo {
 
     public void setIsVisible(boolean isVisible) {
         this.isVisible = isVisible;
-    }
-
-    public static int getContador() {
-        return contador;
-    }
-
-    public static void setContador(int contador) {
-        Inimigo.contador = contador;
     }
 
     public Rectangle getBounds() {

@@ -1,4 +1,4 @@
-package snakegamejava;
+package snakegame;
 
 //package S05_SimulacaoFisicaJogo;
 
