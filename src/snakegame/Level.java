@@ -18,7 +18,6 @@ import javax.swing.Timer;
 /**
  * 
  * @author William Benjamim Menezes Sampaio
- * @extend JPanel
  */
 public final class Level extends JPanel implements ActionListener {
 
@@ -32,6 +31,10 @@ public final class Level extends JPanel implements ActionListener {
     private int delay = 250;
     private boolean pause;
 
+    /**
+     * Snake game in Java
+     * @param screenSize Current resolution of the screen
+     */
     public Level(Point screenSize)/* throws LineUnavailableException, IOException */ {
         setFocusable(true);
         setDoubleBuffered(true);
@@ -62,6 +65,10 @@ public final class Level extends JPanel implements ActionListener {
         this.timer.start();
     }
 
+    /**
+     *
+     * @param g
+     */
     @Override
     public void paint(Graphics g) {
 
@@ -192,6 +199,10 @@ public final class Level extends JPanel implements ActionListener {
 
     }
 
+    /**
+     *
+     * @param arg0
+     */
     @Override
     public void actionPerformed(ActionEvent arg0) {
 
