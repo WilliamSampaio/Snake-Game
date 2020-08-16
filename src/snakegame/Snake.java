@@ -14,6 +14,7 @@ public class Snake {
     private String direction;
     private Color colorAlive;
     private Color colorDie;
+    private ArrayList<KeyEvent> aux;
 
     public List<Point> getSegments() {
         return segments;
@@ -37,6 +38,8 @@ public class Snake {
         this.colorDie = die;
         this.segments = new ArrayList<>();
         this.alive = true;
+
+        this.aux = new ArrayList<>();
     }
 
     public void move(Point gridSize) {
@@ -113,7 +116,19 @@ public class Snake {
     }
 
     public void keyPressed(KeyEvent tecla) {
-        int code = tecla.getKeyCode();
+
+        if (aux.isEmpty()) {
+            aux.add(tecla);
+        } else if (aux.size() == 1) {
+            aux.add(tecla);
+        } else if (aux.size() == 2) {
+            aux.add(tecla);
+        } else {
+            aux.remove(aux.size() - 1);
+            aux.add(tecla);
+        }
+
+        int code = aux.get(aux.size() - 1).getKeyCode();
 
         if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W) {
             if (!this.direction.equals("down")) {
