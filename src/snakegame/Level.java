@@ -32,7 +32,7 @@ public final class Level extends JPanel implements ActionListener {
         addKeyListener(new KeyBoardAdapter());
         this.screenSize = screenSize;
         this.unitSize = this.screenSize.y / 50;
-        this.gridSize = new Point(10, 10);
+        this.gridSize = new Point(45, 45);
         this.snake = new Snake("left", Color.YELLOW, Color.LIGHT_GRAY);
         snake.addSegments(new Point(2, 0));
         snake.addSegments(new Point(3, 0));
