@@ -32,12 +32,12 @@ public final class Level extends JPanel implements ActionListener {
         addKeyListener(new KeyBoardAdapter());
         this.screenSize = screenSize;
         this.unitSize = this.screenSize.y / 50;
-        this.gridSize = new Point(45, 45);
+        this.gridSize = new Point(10, 10);
         this.snake = new Snake("left", Color.YELLOW, Color.LIGHT_GRAY);
         snake.addSegments(new Point(2, 0));
-        /*snake.addSegments(new Point(3, 0));
+        snake.addSegments(new Point(3, 0));
         snake.addSegments(new Point(4, 0));
-        snake.addSegments(new Point(5, 0));
+        /*snake.addSegments(new Point(5, 0));
         snake.addSegments(new Point(6, 0));
         snake.addSegments(new Point(7, 0));
         snake.addSegments(new Point(8, 0));
@@ -49,8 +49,7 @@ public final class Level extends JPanel implements ActionListener {
         snake.addSegments(new Point(14, 0));
         snake.addSegments(new Point(15, 0));
         snake.addSegments(new Point(16, 0));
-        snake.addSegments(new Point(17, 0));
-         */
+        snake.addSegments(new Point(17, 0));*/
         this.food = new Food(new Point(this.gridSize.x / 2, this.gridSize.y / 2));
         timer = new Timer(delay, this);
         timer.start();
@@ -191,7 +190,7 @@ public final class Level extends JPanel implements ActionListener {
 
         if (snake.getSegments().get(0).equals(food.getPosition())) {
             snake.eat(this.gridSize);
-            food.newPosition(this.gridSize);
+            food.newPosition(this.gridSize, snake.getSegments());
         } else {
             if (snake.isAlive()) {
                 snake.move(this.gridSize);
