@@ -15,6 +15,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
+/**
+ * 
+ * @author William Benjamim Menezes Sampaio
+ * @extend JPanel
+ */
 public final class Level extends JPanel implements ActionListener {
 
     private Snake snake;
@@ -25,6 +30,7 @@ public final class Level extends JPanel implements ActionListener {
     private Point gridSize;
     private int unitSize;
     private int delay = 250;
+    private boolean pause;
 
     public Level(Point screenSize)/* throws LineUnavailableException, IOException */ {
         setFocusable(true);
@@ -51,8 +57,9 @@ public final class Level extends JPanel implements ActionListener {
         snake.addSegments(new Point(16, 0));
         snake.addSegments(new Point(17, 0));*/
         this.food = new Food(new Point(this.gridSize.x / 2, this.gridSize.y / 2));
-        timer = new Timer(delay, this);
-        timer.start();
+        this.pause = false;
+        this.timer = new Timer(delay, this);
+        this.timer.start();
     }
 
     @Override
@@ -60,9 +67,9 @@ public final class Level extends JPanel implements ActionListener {
 
         Graphics2D graficos = (Graphics2D) g;
 
-        graficos.setColor(Color.DARK_GRAY);
+        graficos.setColor(Color.BLACK);
         graficos.fillRect(0, 0, screenSize.x, screenSize.y);
-        graficos.setColor(Color.GRAY);
+        graficos.setColor(Color.DARK_GRAY);
         graficos.fillRect(
                 (screenSize.x - (gridSize.x * unitSize)) / 2,
                 (screenSize.y - (gridSize.y * unitSize)) / 2,
@@ -208,6 +215,17 @@ public final class Level extends JPanel implements ActionListener {
 
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 // coming soon
+
+            }
+
+            if (e.getKeyCode() == KeyEvent.VK_P) {
+                if (!pause) {
+                    timer.stop();
+                    pause = true;
+                } else {
+                    timer.start();
+                    pause = false;
+                }
             }
 
             if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
