@@ -48,13 +48,26 @@ public class Food {
 
         Graphics2D graficos = (Graphics2D) g;
 
-        graficos.setColor(Color.RED);
-
+        graficos.setColor(Color.BLACK);
         graficos.fillRect(
                 ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.position.x * unitSize),
                 ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.position.y * unitSize),
                 unitSize,
                 unitSize);
+
+        graficos.setColor(new Color(137, 151, 116));
+        graficos.fillRect(
+                ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.position.x * unitSize) + 1,
+                ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.position.y * unitSize) + 1,
+                unitSize - 2,
+                unitSize - 2);
+
+        graficos.setColor(Color.BLACK);
+        graficos.fillRect(
+                ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.position.x * unitSize) + 3,
+                ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.position.y * unitSize) + 3,
+                unitSize - 6,
+                unitSize - 6);
 
         return graficos;
     }

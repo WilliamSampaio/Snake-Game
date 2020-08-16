@@ -28,8 +28,14 @@ public class Grid {
 
         Graphics2D graficos = (Graphics2D) g;
 
-        graficos.setColor(this.gridColor);
+        graficos.setColor(Color.BLACK);
+        graficos.fillRect(
+                ((screenSize.x - (gridSize.x * unitSize)) / 2) - 1,
+                ((screenSize.y - (gridSize.y * unitSize)) / 2) - 1,
+                (gridSize.x * unitSize) + 2,
+                (gridSize.y * unitSize) + 2);
 
+        graficos.setColor(this.gridColor);
         graficos.fillRect(
                 (screenSize.x - (gridSize.x * unitSize)) / 2,
                 (screenSize.y - (gridSize.y * unitSize)) / 2,

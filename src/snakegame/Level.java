@@ -42,8 +42,8 @@ public final class Level extends JPanel implements ActionListener {
         addKeyListener(new KeyBoardAdapter());
         this.screenSize = screenSize;
         this.unitSize = this.screenSize.y / 50;
-        this.grid = new Grid(new Point(45, 45), Color.WHITE);
-        this.snake = new Snake("left", Color.YELLOW, Color.LIGHT_GRAY);
+        this.grid = new Grid(new Point(45, 45), new Color(137, 151, 116));
+        this.snake = new Snake("left", Color.BLACK, Color.DARK_GRAY);
         snake.addSegments(new Point(2, 0));
         snake.addSegments(new Point(3, 0));
         snake.addSegments(new Point(4, 0));
@@ -75,7 +75,7 @@ public final class Level extends JPanel implements ActionListener {
 
         Graphics2D graficos = (Graphics2D) g;
 
-        graficos.setColor(Color.BLACK);
+        graficos.setColor(new Color(137, 151, 116));
         graficos.fillRect(0, 0, screenSize.x, screenSize.y);
 
         grid.paint(graficos, this.screenSize, this.unitSize);

@@ -161,13 +161,32 @@ public class Snake {
             graficos.setColor(this.colorAlive);
 
             for (int i = 0; i < this.segments.size(); i++) {
-                if (i == 0) {
+
+                graficos.setColor(this.colorAlive);
+                graficos.fillRect(
+                        ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.segments.get(i).x * unitSize),
+                        ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.segments.get(i).y * unitSize),
+                        unitSize,
+                        unitSize);
+                graficos.setColor(new Color(137, 151, 116));
+                graficos.fillRect(
+                        ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.segments.get(i).x * unitSize) + 1,
+                        ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.segments.get(i).y * unitSize) + 1,
+                        unitSize - 2,
+                        unitSize - 2);
+                graficos.setColor(this.colorAlive);
+                graficos.fillRect(
+                        ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.segments.get(i).x * unitSize) + 3,
+                        ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.segments.get(i).y * unitSize) + 3,
+                        unitSize - 6,
+                        unitSize - 6);
+                /*if (i == 0) {
                     graficos.fillRect(
                             ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.segments.get(i).x * unitSize) - 1,
                             ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.segments.get(i).y * unitSize) - 1,
                             unitSize + 2,
                             unitSize + 2);
-                } else if (i == this.segments.size() - 5) {
+                } else*/ /*if (i == this.segments.size() - 5) {
                     graficos.fillRect(
                             ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.segments.get(i).x * unitSize) + 2,
                             ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.segments.get(i).y * unitSize) + 2,
@@ -199,18 +218,18 @@ public class Snake {
                             unitSize - 10);
                 } else {
                     graficos.fillRect(
-                            ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.segments.get(i).x * unitSize),
-                            ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.segments.get(i).y * unitSize),
-                            unitSize,
-                            unitSize);
-                }
+                            (((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.segments.get(i).x * unitSize)) + 1,
+                            (((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.segments.get(i).y * unitSize)) + 1,
+                            unitSize - 2,
+                            unitSize - 2);
+                }*/
 
             }
         } else {
             graficos.setColor(this.colorDie);
 
             for (int i = 0; i < this.segments.size(); i++) {
-                graficos.fillRect(
+                graficos.drawRect(
                         ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.segments.get(i).x * unitSize) + 7,
                         ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.segments.get(i).y * unitSize) + 7,
                         unitSize - 14,
