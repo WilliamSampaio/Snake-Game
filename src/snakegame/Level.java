@@ -21,6 +21,11 @@ import javax.swing.Timer;
  */
 public final class Level extends JPanel implements ActionListener {
 
+    private final int MENU = 0;
+    private final int PLAY = 1;
+    private final int OVER = 2;
+
+    private Menu menu;
     private Grid grid;
     private Snake snake;
     private Food food;
@@ -30,6 +35,8 @@ public final class Level extends JPanel implements ActionListener {
     private int unitSize;
     private int delay = 250;
     private boolean pause;
+
+    private int gameStatus;
 
     /**
      * Snake game in Java
@@ -42,7 +49,10 @@ public final class Level extends JPanel implements ActionListener {
         addKeyListener(new KeyBoardAdapter());
         this.screenSize = screenSize;
         this.unitSize = this.screenSize.y / 50;
-        this.grid = new Grid(new Point(45, 45), new Color(137, 151, 116));
+
+        this.menu = new Menu(screenSize);
+
+        this.grid = new Grid(new Point(30, 40), new Color(137, 151, 116));
         this.snake = new Snake("right", Color.BLACK, Color.DARK_GRAY);
         snake.addSegments(new Point(2, 0));
         snake.addSegments(new Point(1, 0));
@@ -50,8 +60,12 @@ public final class Level extends JPanel implements ActionListener {
 
         this.food = new Food(new Point(this.grid.getGridSize().x / 2, this.grid.getGridSize().y / 2));
         this.pause = false;
+
+        this.gameStatus = MENU;
+
         this.timer = new Timer(delay, this);
         this.timer.start();
+
     }
 
     /**
@@ -66,9 +80,15 @@ public final class Level extends JPanel implements ActionListener {
         graficos.setColor(new Color(137, 151, 116));
         graficos.fillRect(0, 0, screenSize.x, screenSize.y);
 
-        grid.paint(graficos, this.screenSize, this.unitSize);
-        food.paint(graficos, this.screenSize, this.grid.getGridSize(), this.unitSize);
-        snake.paint(graficos, this.screenSize, this.grid.getGridSize(), this.unitSize);
+        if (this.gameStatus == MENU) {
+            menu.paint(graficos/*, screenSize, screenSize, unitSize*/);
+        }
+
+        if (gameStatus == PLAY) {
+            grid.paint(graficos, this.screenSize, this.unitSize);
+            food.paint(graficos, this.screenSize, this.grid.getGridSize(), this.unitSize);
+            snake.paint(graficos, this.screenSize, this.grid.getGridSize(), this.unitSize);
+        }
 
         /* switch (emJogo) {
             case ESTADO_EMJOGO:
@@ -190,14 +210,17 @@ public final class Level extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent arg0) {
 
-        if (snake.getSegments().get(0).equals(food.getPosition())) {
-            snake.eat(this.grid.getGridSize());
-            food.newPosition(this.grid.getGridSize(), snake.getSegments());
-        } else {
-            if (snake.isAlive()) {
-                snake.move(this.grid.getGridSize());
+        if (gameStatus == PLAY) {
+            if (snake.getSegments().get(0).equals(food.getPosition())) {
+                snake.eat(this.grid.getGridSize());
+                food.newPosition(this.grid.getGridSize(), snake.getSegments());
+            } else {
+                if (snake.isAlive()) {
+                    snake.move(this.grid.getGridSize());
+                }
             }
         }
+
         repaint();
     }
 
@@ -206,20 +229,22 @@ public final class Level extends JPanel implements ActionListener {
         @Override
         public void keyPressed(KeyEvent e) {
 
-            snake.keyPressed(e);
-
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                // coming soon
-
+            if (gameStatus == MENU) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    gameStatus = PLAY;
+                }
             }
 
-            if (e.getKeyCode() == KeyEvent.VK_P) {
-                if (!pause) {
-                    timer.stop();
-                    pause = true;
-                } else {
-                    timer.start();
-                    pause = false;
+            if (gameStatus == PLAY) {
+                snake.keyPressed(e);
+                if (e.getKeyCode() == KeyEvent.VK_P) {
+                    if (!pause) {
+                        timer.stop();
+                        pause = true;
+                    } else {
+                        timer.start();
+                        pause = false;
+                    }
                 }
             }
 

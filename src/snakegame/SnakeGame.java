@@ -32,7 +32,7 @@ public class SnakeGame extends JFrame {
         //setResizable(false);
         
         // if true then the upper bar in game window are hide
-        setUndecorated(false);
+        setUndecorated(true);
 
         // sets game window start maximized
         setExtendedState(JFrame.MAXIMIZED_BOTH);
