@@ -1,7 +1,5 @@
 package snakegame;
 
-//package S05_SimulacaoFisicaJogo;
-
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
@@ -9,9 +7,9 @@ import java.io.IOException;
 import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JFrame;
 
-public class Container extends JFrame {
+public class SnakeGame extends JFrame {
 
-    public Container() throws LineUnavailableException, IOException {
+    public SnakeGame() throws LineUnavailableException, IOException {
 
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         
@@ -35,6 +33,6 @@ public class Container extends JFrame {
     }
 
     public static void main(String[] args) throws LineUnavailableException, IOException {
-        Container container = new Container();
+        SnakeGame container = new SnakeGame();
     }
 }
