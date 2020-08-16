@@ -218,7 +218,6 @@ public final class Level extends JPanel implements ActionListener {
     public void setMusica1(String musica1) {
         this.musica1 = musica1;
     }*/
-
     private int[][] coordenadas = {
         {2380, 400},
         {2600, 378},
@@ -314,12 +313,12 @@ public final class Level extends JPanel implements ActionListener {
             System.out.println("Erro ao tocar: " + e);
         }
     }*/
-    public Level(Point point)/* throws LineUnavailableException, IOException */{
+    public Level(Point point)/* throws LineUnavailableException, IOException */ {
 
         setFocusable(true);
         setDoubleBuffered(true);
 
-        addKeyListener(new TecladoAdapter());
+        addKeyListener(new KeyBoardAdapter());
 
         //setScreenSize(new Point(800, 600));
         setScreenSize(point);
@@ -563,48 +562,14 @@ public final class Level extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent arg0) {
-
-        /*if (inimigos.size() == 0) {
-            emJogo = ESTADO_FASECONCLUIDA;
-        }*/
- /*List<Missel> misseis = snake.getMisseis();
-
-        for (int i = 0; i < misseis.size(); i++) {
-
-            Missel m = (Missel) misseis.get(i);
-
-            if (m.isIsVisible()) {
-                m.move();
-            } else {
-                misseis.remove(i);
-            }
-        }*/
-
- /* for (int i = 0; i < inimigos.size(); i++) {
-
-            Inimigo in = inimigos.get(i);
-
-            if (in.isIsVisible()) {
-                in.move();
-            } else {
-                inimigos.remove(i);
-            }
-        }*/
+        
         if (snake.getSegments().get(0).equals(food.getPosition())) {
             snake.eat(this.gridSize);
             food.newPosition(this.gridSize);
         } else {
             if (snake.isAlive()) {
                 snake.move(this.gridSize);
-                //snake.checkSelfCollision();
-            }/* else {
-                //snake.die();
-            }*/
-        }
-
-        //snake.move(this.gridSize);
-        if (faseAtual != 5) {
-            //checarColisoes();
+            }
         }
 
         moveFundo();
@@ -652,91 +617,21 @@ public final class Level extends JPanel implements ActionListener {
         }
 
     }*/
-    private class TecladoAdapter extends KeyAdapter {
+    private class KeyBoardAdapter extends KeyAdapter {
 
         @Override
         public void keyPressed(KeyEvent e) {
-            Graphics g = null;
 
-            /*if (e.getKeyCode() == KeyEvent.VK_1) {
-                snake.setImagem(new ImageIcon("./assets/img/nave1.gif").getImage());
-                naveAtual = 1;
-            }
-
-            if (e.getKeyCode() == KeyEvent.VK_2) {
-                snake.setImagem(new ImageIcon("./assets/img/nave2.gif").getImage());
-                naveAtual = 2;
-            }*/
-
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-
-                
-                
-                //resetGame();
-
-                /*switch (emJogo) {
-                    case ESTADO_GAMEOVER:
-                        vidas -= 1;
-                        if (vidas == 0) {
-                            emJogo = ESTADO_MENU;
-                            break;
-                        } else {
-                            setFase(faseAtual);
-                            emJogo = ESTADO_EMJOGO;
-                            break;
-                        }
-                    case ESTADO_FASECONCLUIDA: {
-                        faseAtual += 1;
-                        setFase(faseAtual);
-                        emJogo = ESTADO_EMJOGO;
-                        break;
-                    }
-                    case ESTADO_MENU:
-                        vidas = 3;
-                        faseAtual = 1;
-                        setFase(faseAtual);
-                        emJogo = ESTADO_EMJOGO;
-                        break;
-                }*/
-            }
             snake.keyPressed(e);
 
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                // coming soon
+            }
+
             if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                emJogo = ESTADO_MENU;
-                
                 System.exit(0);
-                
             }
         }
-
-        /*@Override
-        public void keyReleased(KeyEvent e) {
-            snake.keyReleased(e);
-        }*/
-    }
-
-    private void resetGame() {
-        this.snake = new Snake("left", Color.YELLOW, Color.LIGHT_GRAY);
-
-        snake.addSegments(new Point(2, 0));
-        snake.addSegments(new Point(3, 0));
-        snake.addSegments(new Point(4, 0));
-        snake.addSegments(new Point(5, 0));
-        snake.addSegments(new Point(6, 0));
-        snake.addSegments(new Point(7, 0));
-        snake.addSegments(new Point(8, 0));
-        snake.addSegments(new Point(9, 0));
-        snake.addSegments(new Point(10, 0));
-        snake.addSegments(new Point(11, 0));
-
-        this.food = new Food(new Point(this.gridSize.x / 2, this.gridSize.y / 2));
-
-        //inicializaInimigos();
-        setEmJogo(ESTADO_MENU);
-        //tocarMusica(getMusica1(), 1);
-        //setTimer(new Timer(/*250 / getFPS()*/500, this));
-        timer = new Timer(delay, this);
-        timer.start();
     }
 
 }
