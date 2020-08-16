@@ -14,12 +14,12 @@ import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.sound.midi.InvalidMidiDataException;
+/*import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.MidiUnavailableException;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
-import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.LineUnavailableException;*/
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -52,8 +52,8 @@ public final class Level extends JPanel implements ActionListener {
     private int fundo1x = 416;
     private int fundo1y = 0;
     private int FPS = 50;
-    private Sequencer player;
-    private String musica1 = "./assets/sound/backsound.mid";
+    /*private Sequencer player;
+    private String musica1 = "./assets/sound/backsound.mid";*/
 
     private Point screenSize;
     private Point gridSize;
@@ -203,7 +203,7 @@ public final class Level extends JPanel implements ActionListener {
         this.fases = fases;
     }
 
-    public Sequencer getPlayer() {
+    /*public Sequencer getPlayer() {
         return player;
     }
 
@@ -217,7 +217,7 @@ public final class Level extends JPanel implements ActionListener {
 
     public void setMusica1(String musica1) {
         this.musica1 = musica1;
-    }
+    }*/
 
     private int[][] coordenadas = {
         {2380, 400},
@@ -314,7 +314,7 @@ public final class Level extends JPanel implements ActionListener {
             System.out.println("Erro ao tocar: " + e);
         }
     }*/
-    public Level(Point point) throws LineUnavailableException, IOException {
+    public Level(Point point)/* throws LineUnavailableException, IOException */{
 
         setFocusable(true);
         setDoubleBuffered(true);

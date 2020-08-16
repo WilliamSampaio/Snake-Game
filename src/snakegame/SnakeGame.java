@@ -3,36 +3,51 @@ package snakegame;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.io.IOException;
-import javax.sound.sampled.LineUnavailableException;
 import javax.swing.JFrame;
 
 public class SnakeGame extends JFrame {
 
-    public SnakeGame() throws LineUnavailableException, IOException {
+    public SnakeGame() {
 
+        // get current screen resolution
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        
-        //System.out.println(screenSize.width + " . " + screenSize.height);
-        
-        Level fase = new Level(new Point(screenSize.width, screenSize.height));
 
+        // declares and instance an object of type Level
+        Level fase;
+        fase = new Level(new Point(screenSize.width, screenSize.height));
+
+        // add object of type Level in current JFrame instance
         add(fase);
 
-        setTitle("Meu Jogo");
+        // sets the name to show in game window
+        setTitle("Snake Game");
+
+        // enable close button in game window
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        // sets the default game window size
         setSize(800, 600);
-        
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setLocationRelativeTo(null);
+
+        // if true then is possible resize game window
         //setResizable(false);
         
-        //setUndecorated(true); // barra superior
+        // if true then the upper bar in game window are hide
+        setUndecorated(false);
+
+        // sets game window start maximized
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        // sets game window start in center of screen
+        setLocationRelativeTo(null);
+
+        // sets window as visible
         setVisible(true);
     }
 
-    public static void main(String[] args) throws LineUnavailableException, IOException {
-        SnakeGame container = new SnakeGame();
+    public static void main(String[] args) {
+
+        // i will really need explain??
+        SnakeGame game;
+        game = new SnakeGame();
     }
 }
