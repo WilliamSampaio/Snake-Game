@@ -27,7 +27,7 @@ public class Food {
         Point possiblePosition;
         possiblePosition = new Point();
         
-        Random rand = new Random(); //instance of random class
+        Random rand = new Random();
         int rangeX = gridSize.x;
         int rangeY = gridSize.y;
         
@@ -50,14 +50,11 @@ public class Food {
         
         graficos.setColor(Color.RED);
 
-        //for (int i = 0; i < this.getSegments().size(); i++) {
-        //int snake
         graficos.fillRect(
                 ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.position.x * unitSize),
                 ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.position.y * unitSize),
                 unitSize,
                 unitSize);
-        // }
 
         return graficos;
     }
