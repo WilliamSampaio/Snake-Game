@@ -3,13 +3,11 @@ package snakegame;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.util.List;
-import java.util.Random;
 
 public class Grid {
 
     private Point gridSize;
-    private Color gridColor;
+    private final Color gridColor;
 
     public Point getGridSize() {
         return gridSize;
@@ -35,7 +33,7 @@ public class Grid {
                 (gridSize.x * unitSize) + 2,
                 (gridSize.y * unitSize) + 2);
 
-        graficos.setColor(this.gridColor);
+        graficos.setColor(gridColor);
         graficos.fillRect(
                 (screenSize.x - (gridSize.x * unitSize)) / 2,
                 (screenSize.y - (gridSize.y * unitSize)) / 2,

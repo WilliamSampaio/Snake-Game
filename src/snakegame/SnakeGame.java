@@ -14,7 +14,8 @@ public class SnakeGame extends JFrame {
 
         // declares and instance an object of type Level
         Level fase;
-        fase = new Level(new Point(screenSize.width, screenSize.height));
+        //fase = new Level(new Point(screenSize.width, screenSize.height));
+        fase = new Level(new Point(800, 600));
 
         // add object of type Level in current JFrame instance
         add(fase);
@@ -35,7 +36,7 @@ public class SnakeGame extends JFrame {
         setUndecorated(true);
 
         // sets game window start maximized
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        //setExtendedState(JFrame.MAXIMIZED_BOTH);
 
         // sets game window start in center of screen
         setLocationRelativeTo(null);

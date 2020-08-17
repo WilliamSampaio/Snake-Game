@@ -19,7 +19,7 @@ public class Food {
     }
 
     public Food(Point initialPos) {
-        this.position = initialPos;
+        position = initialPos;
     }
 
     void newPosition(Point gridSize, List<Point> segments) {
@@ -36,12 +36,12 @@ public class Food {
 
         for (int i = 0; i < segments.size(); i++) {
             if (possiblePosition.equals(segments.get(i))) {
-                this.newPosition(gridSize, segments);
+                newPosition(gridSize, segments);
             }
         }
 
-        this.position.x = rand.nextInt(rangeX);
-        this.position.y = rand.nextInt(rangeY);
+        position.x = rand.nextInt(rangeX);
+        position.y = rand.nextInt(rangeY);
     }
 
     public Graphics2D paint(Graphics2D g, Point screenSize, Point gridSize, int unitSize) {
@@ -50,22 +50,22 @@ public class Food {
 
         graficos.setColor(Color.BLACK);
         graficos.fillRect(
-                ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.position.x * unitSize),
-                ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.position.y * unitSize),
+                ((screenSize.x - (gridSize.x * unitSize)) / 2) + (position.x * unitSize),
+                ((screenSize.y - (gridSize.y * unitSize)) / 2) + (position.y * unitSize),
                 unitSize,
                 unitSize);
 
         graficos.setColor(new Color(137, 151, 116));
         graficos.fillRect(
-                ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.position.x * unitSize) + 1,
-                ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.position.y * unitSize) + 1,
+                ((screenSize.x - (gridSize.x * unitSize)) / 2) + (position.x * unitSize) + 1,
+                ((screenSize.y - (gridSize.y * unitSize)) / 2) + (position.y * unitSize) + 1,
                 unitSize - 2,
                 unitSize - 2);
 
         graficos.setColor(Color.BLACK);
         graficos.fillRect(
-                ((screenSize.x - (gridSize.x * unitSize)) / 2) + (this.position.x * unitSize) + 3,
-                ((screenSize.y - (gridSize.y * unitSize)) / 2) + (this.position.y * unitSize) + 3,
+                ((screenSize.x - (gridSize.x * unitSize)) / 2) + (position.x * unitSize) + 3,
+                ((screenSize.y - (gridSize.y * unitSize)) / 2) + (position.y * unitSize) + 3,
                 unitSize - 6,
                 unitSize - 6);
 

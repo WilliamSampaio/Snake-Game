@@ -1,17 +1,13 @@
 package snakegame;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.List;
-import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -48,23 +44,23 @@ public final class Level extends JPanel implements ActionListener {
         setDoubleBuffered(true);
         addKeyListener(new KeyBoardAdapter());
         this.screenSize = screenSize;
-        this.unitSize = this.screenSize.y / 50;
+        unitSize = screenSize.y / 50;
 
-        this.menu = new Menu(screenSize);
+        menu = new Menu(screenSize, unitSize);
 
-        this.grid = new Grid(new Point(30, 40), new Color(137, 151, 116));
-        this.snake = new Snake("right", Color.BLACK, Color.DARK_GRAY);
+        grid = new Grid(new Point(30, 40), new Color(137, 151, 116));
+        snake = new Snake("right", Color.BLACK, Color.DARK_GRAY);
         snake.addSegments(new Point(2, 0));
         snake.addSegments(new Point(1, 0));
         snake.addSegments(new Point(0, 0));
 
-        this.food = new Food(new Point(this.grid.getGridSize().x / 2, this.grid.getGridSize().y / 2));
-        this.pause = false;
+        food = new Food(new Point(grid.getGridSize().x / 2, grid.getGridSize().y / 2));
+        pause = false;
 
-        this.gameStatus = MENU;
+        gameStatus = MENU;
 
-        this.timer = new Timer(delay, this);
-        this.timer.start();
+        timer = new Timer(delay, this);
+        timer.start();
 
     }
 
@@ -80,125 +76,16 @@ public final class Level extends JPanel implements ActionListener {
         graficos.setColor(new Color(137, 151, 116));
         graficos.fillRect(0, 0, screenSize.x, screenSize.y);
 
-        if (this.gameStatus == MENU) {
-            menu.paint(graficos/*, screenSize, screenSize, unitSize*/);
+        if (gameStatus == MENU) {
+            menu.paint(graficos, screenSize, unitSize);
         }
 
         if (gameStatus == PLAY) {
-            grid.paint(graficos, this.screenSize, this.unitSize);
-            food.paint(graficos, this.screenSize, this.grid.getGridSize(), this.unitSize);
-            snake.paint(graficos, this.screenSize, this.grid.getGridSize(), this.unitSize);
+            grid.paint(graficos, screenSize, unitSize);
+            food.paint(graficos, screenSize, grid.getGridSize(), unitSize);
+            snake.paint(graficos, screenSize, grid.getGridSize(), unitSize);
         }
 
-        /* switch (emJogo) {
-            case ESTADO_EMJOGO:
-                //graficos.drawImage(snake.getImagem(), snake.getX(), snake.getY(), snake.getAltura() / 2, snake.getLargura() / 2, this);
-
-                //List<Missel> misseis = snake.getMisseis();
-                /*for (int i = 0; i < misseis.size(); i++) {
-
-                    Missel m = (Missel) misseis.get(i);
-                    graficos.drawImage(m.getImagem(), m.getX(), m.getY(), this);
-                }
-                for (int i = 0; i < inimigos.size(); i++) {
-
-                    Inimigo in = inimigos.get(i);
-                    graficos.drawImage(in.getImagem(), in.getX(), in.getY(), this);
-                }
-                graficos.setFont(new Font("arial", Font.BOLD, 20));
-                graficos.setColor(Color.WHITE);
-                //graficos.drawString("INIMIGOS: " + inimigos.size(), 5, 20);
-
-                graficos.setFont(new Font("arial", Font.BOLD, 20));
-                graficos.setColor(Color.WHITE);
-                graficos.drawString("VIDAS: " + vidas, 200, 20);
-
-                graficos.setFont(new Font("arial", Font.BOLD, 20));
-                graficos.setColor(Color.WHITE);
-                graficos.drawString("NAVE: " + naveAtual, 350, 20);
-
-                graficos.setFont(new Font("arial", Font.BOLD, 20));
-                graficos.setColor(Color.WHITE);
-                graficos.drawString("FASE: " + faseAtual, 500, 20);
-
-                if (faseAtual == 5) {
-                    graficos.setColor(Color.BLACK);
-                    graficos.fillRect(0, 50, 1200, 160);
-
-                    graficos.setFont(new Font("arial", Font.BOLD, 20));
-                    graficos.setColor(Color.WHITE);
-                    graficos.drawString("EQUIPE:", 300, 100);
-
-                    graficos.setFont(new Font("arial", Font.BOLD, 20));
-                    graficos.setColor(Color.WHITE);
-                    graficos.drawString(" >  LEVY LIRA", 300, 120);
-
-                    graficos.setFont(new Font("arial", Font.BOLD, 20));
-                    graficos.setColor(Color.WHITE);
-                    graficos.drawString(" >  LISVANETE GARCIA", 300, 140);
-
-                    graficos.setFont(new Font("arial", Font.BOLD, 20));
-                    graficos.setColor(Color.WHITE);
-                    graficos.drawString(" >  GABRIEL BEZERRA", 300, 160);
-
-                    graficos.setFont(new Font("arial", Font.BOLD, 20));
-                    graficos.setColor(Color.WHITE);
-                    graficos.drawString(" >  WILLIAM SAMPAIO", 300, 180);
-
-                    ImageIcon unip = new ImageIcon("./assets/img/unip.png");
-                    graficos.drawImage(unip.getImage(), 600, 75, null);
-                }
-
-                break;
-            case ESTADO_FASECONCLUIDA:
-                if (faseAtual != 5) {
-                    graficos.setColor(Color.BLACK);
-                    graficos.fillRect(0, 50, 1200, 160);
-
-                    graficos.setFont(new Font("arial", Font.BOLD, 60));
-                    graficos.setColor(Color.WHITE);
-                    graficos.drawString("FASE " + faseAtual, 100, 110);
-                    graficos.setFont(new Font("arial", Font.BOLD, 40));
-                    graficos.drawString("CONCLUIDA", 100, 160);
-                    graficos.setFont(new Font("arial", Font.BOLD, 80));
-                    graficos.drawString(">>>", 550, 160);
-
-                }
-                break;
-            case ESTADO_GAMEOVER: {
-                graficos.setColor(Color.BLACK);
-                graficos.fillRect(0, 50, 1200, 160);
-
-                graficos.setColor(Color.WHITE);
-
-                graficos.setFont(new Font("arial", Font.BOLD, 80));
-                graficos.drawString("GAME OVER", 100, 160);
-                break;
-            }
-            case ESTADO_MENU: {
-                graficos.setColor(Color.BLACK);
-                graficos.fillRect(0, 50, 1200, 160);
-
- graficos.setColor(Color.YELLOW);
-
-                for (int i = 0; i < snake.getSegments().size(); i++) {
-                    //int snake
-                    graficos.fillRect(
-                            ((getScreenSize().x - (getGridSize().x * getUnitSize())) / 2) + (snake.getSegments().get(i).x * getUnitSize()),
-                            ((getScreenSize().y - (getGridSize().y * getUnitSize())) / 2) + (snake.getSegments().get(i).y * getUnitSize()),
-                            getUnitSize() - 1,
-                            getUnitSize() - 1);
-                }*/
-
- /*graficos.setFont(new Font("arial", Font.BOLD, 80));
-                graficos.drawString("DS1A34", 200, 160);
-                graficos.setFont(new Font("arial", Font.BOLD, 20));
-                graficos.setColor(Color.WHITE);
-                graficos.drawString("PRESSIONE ENTER PARA INICIAR", 440, 550);
-                break;
-            }
-
-        }*/
         g.dispose();
 
     }
@@ -210,13 +97,27 @@ public final class Level extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent arg0) {
 
+        if (gameStatus == MENU) {
+            switch (menu.getSelectedOption()) {
+                case 1:
+                    gameStatus = PLAY;
+                    break;
+                case 2:
+                    // in comming!
+                    break;
+                case 3:
+                    System.exit(0);
+                    break;
+            }
+        }
+
         if (gameStatus == PLAY) {
             if (snake.getSegments().get(0).equals(food.getPosition())) {
-                snake.eat(this.grid.getGridSize());
-                food.newPosition(this.grid.getGridSize(), snake.getSegments());
+                snake.eat(grid.getGridSize());
+                food.newPosition(grid.getGridSize(), snake.getSegments());
             } else {
                 if (snake.isAlive()) {
-                    snake.move(this.grid.getGridSize());
+                    snake.move(grid.getGridSize());
                 }
             }
         }
@@ -230,9 +131,7 @@ public final class Level extends JPanel implements ActionListener {
         public void keyPressed(KeyEvent e) {
 
             if (gameStatus == MENU) {
-                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                    gameStatus = PLAY;
-                }
+                menu.keyPressed(e);
             }
 
             if (gameStatus == PLAY) {
