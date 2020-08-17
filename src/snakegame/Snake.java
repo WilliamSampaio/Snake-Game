@@ -11,7 +11,7 @@ public class Snake {
 
     private boolean alive;
     private final List<Point> segments;
-    private String direction;
+    private int direction;
     private final Color colorAlive;
     private final Color colorDie;
     private final ArrayList<KeyEvent> aux;
@@ -32,7 +32,7 @@ public class Snake {
         this.alive = alive;
     }
 
-    public Snake(String direction, Color alive, Color die) {
+    public Snake(int direction, Color alive, Color die) {
         this.direction = direction;
         colorAlive = alive;
         colorDie = die;
@@ -45,21 +45,21 @@ public class Snake {
         Point newPos;
         if (alive) {
             switch (direction) {
-                case "left":
+                case Game.LEFT:
                     if (segments.get(0).x == 0) {
                         newPos = new Point(gridSize.x - 1, segments.get(0).y);
                     } else {
                         newPos = new Point(segments.get(0).x - 1, segments.get(0).y);
                     }
                     break;
-                case "right":
+                case Game.RIGHT:
                     if (segments.get(0).x == (gridSize.x - 1)) {
                         newPos = new Point(0, segments.get(0).y);
                     } else {
                         newPos = new Point(segments.get(0).x + 1, segments.get(0).y);
                     }
                     break;
-                case "up":
+                case Game.UP:
                     if (segments.get(0).y == 0) {
                         newPos = new Point(segments.get(0).x, gridSize.y - 1);
                     } else {
@@ -83,21 +83,21 @@ public class Snake {
     void eat(Point gridSize) {
         Point newPos;
         switch (direction) {
-            case "left":
+            case Game.LEFT:
                 if (segments.get(0).x == 0) {
                     newPos = new Point(gridSize.x - 1, segments.get(0).y);
                 } else {
                     newPos = new Point(segments.get(0).x - 1, segments.get(0).y);
                 }
                 break;
-            case "right":
+            case Game.RIGHT:
                 if (segments.get(0).x == (gridSize.x - 1)) {
                     newPos = new Point(0, segments.get(0).y);
                 } else {
                     newPos = new Point(segments.get(0).x + 1, segments.get(0).y);
                 }
                 break;
-            case "up":
+            case Game.UP:
                 if (segments.get(0).y == 0) {
                     newPos = new Point(segments.get(0).x, gridSize.y - 1);
                 } else {
@@ -140,26 +140,26 @@ public class Snake {
         int code = aux.get(aux.size() - 1).getKeyCode();
 
         if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W) {
-            if (!direction.equals("down")) {
-                direction = "up";
+            if (direction != Game.DOWN) {
+                direction = Game.UP;
             }
         }
 
         if (code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S) {
-            if (!direction.equals("up")) {
-                direction = "down";
+            if (direction != Game.UP) {
+                direction = Game.DOWN;
             }
         }
 
         if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_A) {
-            if (!direction.equals("right")) {
-                direction = "left";
+            if (direction != Game.RIGHT) {
+                direction = Game.LEFT; 
             }
         }
 
         if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_D) {
-            if (!direction.equals("left")) {
-                direction = "right";
+            if (direction != Game.LEFT) {
+                direction = Game.RIGHT;
             }
         }
     }
@@ -192,7 +192,6 @@ public class Snake {
             }
         } else {
             graficos.setColor(colorDie);
-
             for (int i = 0; i < segments.size(); i++) {
                 graficos.drawRect(
                         ((screenSize.x - (gridSize.x * unitSize)) / 2) + (segments.get(i).x * unitSize) + 7,

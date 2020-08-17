@@ -17,10 +17,6 @@ import javax.swing.Timer;
  */
 public final class Level extends JPanel implements ActionListener {
 
-    private final int MENU = 0;
-    private final int PLAY = 1;
-    private final int OVER = 2;
-
     private Menu menu;
     private Grid grid;
     private Snake snake;
@@ -49,7 +45,7 @@ public final class Level extends JPanel implements ActionListener {
         menu = new Menu(screenSize, unitSize);
 
         grid = new Grid(new Point(30, 40), new Color(137, 151, 116));
-        snake = new Snake("right", Color.BLACK, Color.DARK_GRAY);
+        snake = new Snake(Game.RIGHT, Color.BLACK, Color.DARK_GRAY);
         snake.addSegments(new Point(2, 0));
         snake.addSegments(new Point(1, 0));
         snake.addSegments(new Point(0, 0));
@@ -57,7 +53,7 @@ public final class Level extends JPanel implements ActionListener {
         food = new Food(new Point(grid.getGridSize().x / 2, grid.getGridSize().y / 2));
         pause = false;
 
-        gameStatus = MENU;
+        gameStatus = Game.IN_MENU;
 
         timer = new Timer(delay, this);
         timer.start();
@@ -76,11 +72,11 @@ public final class Level extends JPanel implements ActionListener {
         graficos.setColor(new Color(137, 151, 116));
         graficos.fillRect(0, 0, screenSize.x, screenSize.y);
 
-        if (gameStatus == MENU) {
+        if (gameStatus == Game.IN_MENU) {
             menu.paint(graficos, screenSize, unitSize);
         }
 
-        if (gameStatus == PLAY) {
+        if (gameStatus == Game.IN_GAME) {
             grid.paint(graficos, screenSize, unitSize);
             food.paint(graficos, screenSize, grid.getGridSize(), unitSize);
             snake.paint(graficos, screenSize, grid.getGridSize(), unitSize);
@@ -97,10 +93,10 @@ public final class Level extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent arg0) {
 
-        if (gameStatus == MENU) {
+        if (gameStatus == Game.IN_MENU) {
             switch (menu.getSelectedOption()) {
                 case 1:
-                    gameStatus = PLAY;
+                    gameStatus = Game.IN_GAME;
                     break;
                 case 2:
                     // in comming!
@@ -111,7 +107,7 @@ public final class Level extends JPanel implements ActionListener {
             }
         }
 
-        if (gameStatus == PLAY) {
+        if (gameStatus == Game.IN_GAME) {
             if (snake.getSegments().get(0).equals(food.getPosition())) {
                 snake.eat(grid.getGridSize());
                 food.newPosition(grid.getGridSize(), snake.getSegments());
@@ -130,11 +126,11 @@ public final class Level extends JPanel implements ActionListener {
         @Override
         public void keyPressed(KeyEvent e) {
 
-            if (gameStatus == MENU) {
+            if (gameStatus == Game.IN_MENU) {
                 menu.keyPressed(e);
             }
 
-            if (gameStatus == PLAY) {
+            if (gameStatus == Game.IN_GAME) {
                 snake.keyPressed(e);
                 if (e.getKeyCode() == KeyEvent.VK_P) {
                     if (!pause) {
