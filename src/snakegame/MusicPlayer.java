@@ -19,35 +19,37 @@ import javazoom.jl.player.Player;
  */
 public class MusicPlayer implements Runnable {
 
-    //private Thread thread;
     private FileInputStream fileInputStream;
     private Player player;
-
-    /*public void setThread(Thread thread) {
-        this.thread = thread;
-    }*/
+    private File[] playList;
+    private String path;
 
     public MusicPlayer() throws JavaLayerException, FileNotFoundException, URISyntaxException {
 
-        //thread = new Thread();
-        /*fileInputStream = null;
-        player = null;*/
-        //FileInputStream fileInputStream = new FileInputStream(getClass().getResource("du-hast.mp3").getFile());
-        //fileInputStream = new FileInputStream(/*new File(getClass().getResource(*/"resources/du-hast.mp3"/*).getFile())*/);
-        player = new Player(new FileInputStream(new File(getClass().getResource("du-hast.mp3").toURI())));
+        // Creates a new File instance by converting the given pathname string
+        // into an abstract pathname
+        path = System.getProperty("user.dir") + "/play-list/";
+        File f = new File(path);
 
-        //thread.start();
+        // Populates the array with names of files and directories
+        playList = f.listFiles();
+
     }
-
-    /*public void play() throws JavaLayerException {
-        run();
-    }*/
 
     @Override
     public void run() {
         try {
-            player.play();
+            if (playList.length >= 1) {
+                for (int i = 0; i < playList.length; i++) {
+                    fileInputStream = new FileInputStream(playList[i]);
+                    player = new Player(fileInputStream);
+                    //System.out.println(playList[i].getName());
+                    player.play();
+                }
+            }
         } catch (JavaLayerException ex) {
+            Logger.getLogger(MusicPlayer.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (FileNotFoundException ex) {
             Logger.getLogger(MusicPlayer.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
