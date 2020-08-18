@@ -4,14 +4,11 @@
  */
 package snakegame;
 
+import jaco.mp3.player.MP3Player;
+import java.awt.Point;
+import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.net.URISyntaxException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javazoom.jl.decoder.JavaLayerException;
-import javazoom.jl.player.Player;
+import javax.swing.BorderFactory;
 
 /**
  *
@@ -19,38 +16,69 @@ import javazoom.jl.player.Player;
  */
 public class MusicPlayer implements Runnable {
 
-    private FileInputStream fileInputStream;
-    private Player player;
-    private File[] playList;
+    private MP3Player playList;
     private String path;
+    private boolean repeat;
+    private boolean shuffle;
 
-    public MusicPlayer() throws JavaLayerException, FileNotFoundException, URISyntaxException {
+    public MP3Player getPlayList() {
+        return playList;
+    }
+        
+    public MusicPlayer(Point screenSize) {
+        
+        repeat = true;
+        shuffle = false;
 
+        playList = new MP3Player();
+        playList.setRepeat(repeat);
+        playList.setShuffle(shuffle);
+        
         // Creates a new File instance by converting the given pathname string
         // into an abstract pathname
         path = System.getProperty("user.dir") + "/play-list/";
         File f = new File(path);
-
         // Populates the array with names of files and directories
-        playList = f.listFiles();
+        File[] musics = f.listFiles();
 
+        if (musics.length >= 1) {
+            for (int i = 0; i < musics.length; i++) {
+                playList.addToPlayList(musics[i]);
+            }
+        }
+        
+        playList.setBorder(BorderFactory.createEmptyBorder(0, 100, screenSize.x, 30));
+        
     }
 
     @Override
     public void run() {
-        try {
-            if (playList.length >= 1) {
-                for (int i = 0; i < playList.length; i++) {
-                    fileInputStream = new FileInputStream(playList[i]);
-                    player = new Player(fileInputStream);
-                    //System.out.println(playList[i].getName());
-                    player.play();
+        playList.play();
+    }
+
+    public void keyPressed(KeyEvent key) {
+
+        int code = key.getKeyCode();
+
+        switch (code) {
+            case KeyEvent.VK_0:
+                playList.stop();
+                break;
+            case KeyEvent.VK_1:
+                playList.skipBackward();
+                break;
+            case KeyEvent.VK_2:
+                if (playList.isPaused()) {
+                    playList.play();
+                } else {
+                    playList.pause();
                 }
-            }
-        } catch (JavaLayerException ex) {
-            Logger.getLogger(MusicPlayer.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(MusicPlayer.class.getName()).log(Level.SEVERE, null, ex);
+                break;
+            case KeyEvent.VK_3:
+                playList.skipForward();
+                break;
+            default:
+                break;
         }
     }
 }

@@ -45,21 +45,21 @@ public class Snake {
         Point newPos;
         if (alive) {
             switch (direction) {
-                case Game.LEFT:
+                case Constants.LEFT:
                     if (segments.get(0).x == 0) {
                         newPos = new Point(gridSize.x - 1, segments.get(0).y);
                     } else {
                         newPos = new Point(segments.get(0).x - 1, segments.get(0).y);
                     }
                     break;
-                case Game.RIGHT:
+                case Constants.RIGHT:
                     if (segments.get(0).x == (gridSize.x - 1)) {
                         newPos = new Point(0, segments.get(0).y);
                     } else {
                         newPos = new Point(segments.get(0).x + 1, segments.get(0).y);
                     }
                     break;
-                case Game.UP:
+                case Constants.UP:
                     if (segments.get(0).y == 0) {
                         newPos = new Point(segments.get(0).x, gridSize.y - 1);
                     } else {
@@ -84,21 +84,21 @@ public class Snake {
     void eat(Point gridSize) {
         Point newPos;
         switch (direction) {
-            case Game.LEFT:
+            case Constants.LEFT:
                 if (segments.get(0).x == 0) {
                     newPos = new Point(gridSize.x - 1, segments.get(0).y);
                 } else {
                     newPos = new Point(segments.get(0).x - 1, segments.get(0).y);
                 }
                 break;
-            case Game.RIGHT:
+            case Constants.RIGHT:
                 if (segments.get(0).x == (gridSize.x - 1)) {
                     newPos = new Point(0, segments.get(0).y);
                 } else {
                     newPos = new Point(segments.get(0).x + 1, segments.get(0).y);
                 }
                 break;
-            case Game.UP:
+            case Constants.UP:
                 if (segments.get(0).y == 0) {
                     newPos = new Point(segments.get(0).x, gridSize.y - 1);
                 } else {
@@ -130,26 +130,26 @@ public class Snake {
         int code = key.getKeyCode();
 
         if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W) {
-            if (direction != Game.DOWN) {
-                direction = Game.UP;
+            if (direction != Constants.DOWN) {
+                direction = Constants.UP;
             }
         }
 
         if (code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S) {
-            if (direction != Game.UP) {
-                direction = Game.DOWN;
+            if (direction != Constants.UP) {
+                direction = Constants.DOWN;
             }
         }
 
         if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_A) {
-            if (direction != Game.RIGHT) {
-                direction = Game.LEFT;
+            if (direction != Constants.RIGHT) {
+                direction = Constants.LEFT;
             }
         }
 
         if (code == KeyEvent.VK_RIGHT || code == KeyEvent.VK_D) {
-            if (direction != Game.LEFT) {
-                direction = Game.RIGHT;
+            if (direction != Constants.LEFT) {
+                direction = Constants.RIGHT;
             }
         }
         keyPressed = true;

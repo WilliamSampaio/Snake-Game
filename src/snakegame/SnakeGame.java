@@ -3,27 +3,21 @@ package snakegame;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
-import javazoom.jl.decoder.JavaLayerException;
 
 public class SnakeGame extends JFrame {
 
-    public SnakeGame() throws UnsupportedAudioFileException, IOException, LineUnavailableException, JavaLayerException, FileNotFoundException, URISyntaxException {
+    public SnakeGame() {
 
         // get current screen resolution
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
-        // declares and instance an object of type Level
-        Level fase;
-        fase = new Level(new Point(screenSize.width, screenSize.height));
-        //fase = new Level(new Point(800, 600));
+        // declares and instance an object of type Game
+        Game fase;
+        fase = new Game(new Point(screenSize.width, screenSize.height));
+        //fase = new Game(new Point(800, 600));
 
-        // add object of type Level in current JFrame instance
+        // add object of type Game in current JFrame instance
         add(fase);
 
         // sets the name to show in game window
@@ -51,7 +45,7 @@ public class SnakeGame extends JFrame {
         setVisible(true);
     }
 
-    public static void main(String[] args) throws UnsupportedAudioFileException, IOException, LineUnavailableException, JavaLayerException, FileNotFoundException, URISyntaxException {
+    public static void main(String[] args) {
 
         // i will really need explain??
         SnakeGame game;
