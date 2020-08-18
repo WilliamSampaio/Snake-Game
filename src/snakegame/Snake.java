@@ -14,7 +14,7 @@ public class Snake {
     private int direction;
     private final Color colorAlive;
     private final Color colorDie;
-    private final ArrayList<KeyEvent> aux;
+    private boolean keyPressed;
 
     public List<Point> getSegments() {
         return segments;
@@ -28,8 +28,8 @@ public class Snake {
         return alive;
     }
 
-    public void setAlive(boolean alive) {
-        this.alive = alive;
+    public boolean isKeyPressed() {
+        return keyPressed;
     }
 
     public Snake(int direction, Color alive, Color die) {
@@ -37,8 +37,8 @@ public class Snake {
         colorAlive = alive;
         colorDie = die;
         segments = new ArrayList<>();
+        keyPressed = false;
         this.alive = true;
-        aux = new ArrayList<>();
     }
 
     public void move(Point gridSize) {
@@ -78,6 +78,7 @@ public class Snake {
             segments.add(0, newPos);
         }
         checkSelfCollision();
+        keyPressed = false;
     }
 
     void eat(Point gridSize) {
@@ -124,20 +125,9 @@ public class Snake {
         }
     }
 
-    public void keyPressed(KeyEvent tecla) {
+    public void keyPressed(KeyEvent key) {
 
-        if (aux.isEmpty()) {
-            aux.add(tecla);
-        } else if (aux.size() == 1) {
-            aux.add(tecla);
-        } else if (aux.size() == 2) {
-            aux.add(tecla);
-        } else {
-            aux.remove(aux.size() - 1);
-            aux.add(tecla);
-        }
-
-        int code = aux.get(aux.size() - 1).getKeyCode();
+        int code = key.getKeyCode();
 
         if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W) {
             if (direction != Game.DOWN) {
@@ -153,7 +143,7 @@ public class Snake {
 
         if (code == KeyEvent.VK_LEFT || code == KeyEvent.VK_A) {
             if (direction != Game.RIGHT) {
-                direction = Game.LEFT; 
+                direction = Game.LEFT;
             }
         }
 
@@ -162,6 +152,7 @@ public class Snake {
                 direction = Game.RIGHT;
             }
         }
+        keyPressed = true;
     }
 
     public Graphics2D paint(Graphics2D g, Point screenSize, Point gridSize, int unitSize) {

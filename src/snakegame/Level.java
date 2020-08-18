@@ -123,6 +123,7 @@ public final class Level extends JPanel implements ActionListener {
 
     private class KeyBoardAdapter extends KeyAdapter {
 
+        //boolean keyPressed = false;
         @Override
         public void keyPressed(KeyEvent e) {
 
@@ -131,7 +132,12 @@ public final class Level extends JPanel implements ActionListener {
             }
 
             if (gameStatus == Game.IN_GAME) {
-                snake.keyPressed(e);
+
+                if (!snake.isKeyPressed()) {
+                    snake.keyPressed(e);
+                    //snake.setKeyPressed(false);
+                }
+
                 if (e.getKeyCode() == KeyEvent.VK_P) {
                     if (!pause) {
                         timer.stop();
