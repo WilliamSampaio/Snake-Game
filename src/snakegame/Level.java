@@ -8,8 +8,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import javazoom.jl.decoder.JavaLayerException;
+import javazoom.jl.player.Player;
 
 /**
  *
@@ -27,15 +35,16 @@ public final class Level extends JPanel implements ActionListener {
     private int unitSize;
     private int delay = 250;
     private boolean pause;
-
     private int gameStatus;
+    private MusicPlayer musicPlayer;
 
     /**
      * Snake game in Java
      *
      * @param screenSize Current resolution of the screen
      */
-    public Level(Point screenSize) {
+    public Level(Point screenSize) throws JavaLayerException, FileNotFoundException, URISyntaxException {
+
         setFocusable(true);
         setDoubleBuffered(true);
         addKeyListener(new KeyBoardAdapter());
@@ -55,11 +64,27 @@ public final class Level extends JPanel implements ActionListener {
 
         gameStatus = Game.IN_MENU;
 
+        musicPlayer = new MusicPlayer();
+        Thread thread = new Thread(musicPlayer);
+        thread.start();
+
         timer = new Timer(delay, this);
         timer.start();
 
+        /*thread = new Thread();
+        FileInputStream fileInputStream = new FileInputStream("resources/du-hast.mp3");
+        player = new Player(fileInputStream);
+        thread.start();
+        run();*/
     }
 
+    /*public void play() throws JavaLayerException {
+        run();
+    }
+
+    private void run() throws JavaLayerException {
+        player.play();
+    }*/
     /**
      *
      * @param g
@@ -94,6 +119,7 @@ public final class Level extends JPanel implements ActionListener {
     public void actionPerformed(ActionEvent arg0) {
 
         if (gameStatus == Game.IN_MENU) {
+
             switch (menu.getSelectedOption()) {
                 case 1:
                     gameStatus = Game.IN_GAME;
@@ -135,7 +161,6 @@ public final class Level extends JPanel implements ActionListener {
 
                 if (!snake.isKeyPressed()) {
                     snake.keyPressed(e);
-                    //snake.setKeyPressed(false);
                 }
 
                 if (e.getKeyCode() == KeyEvent.VK_P) {
