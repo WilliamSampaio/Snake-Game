@@ -47,8 +47,6 @@ public class MusicPlayer implements Runnable {
             }
         }
         
-        playList.setBorder(BorderFactory.createEmptyBorder(0, 100, screenSize.x, 30));
-        
     }
 
     @Override
@@ -62,6 +60,11 @@ public class MusicPlayer implements Runnable {
 
         switch (code) {
             case KeyEvent.VK_0:
+                if(playList.isStopped()){
+                    playList.play();
+                }else{
+                    playList.stop();
+                }
                 playList.stop();
                 break;
             case KeyEvent.VK_1:

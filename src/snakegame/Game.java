@@ -58,14 +58,6 @@ public final class Game extends JPanel implements ActionListener {
 
         musicPlayer = new MusicPlayer(screenSize);
         
-        JPanel jPanel = new JPanel();
-        jPanel.add(musicPlayer.getPlayList().getComponent(0));
-        
-        add(jPanel);
-        jPanel.setVisible(true);
-        add(musicPlayer.getPlayList().getComponent(0));
-        
-        
         Thread thread = new Thread(musicPlayer);
         thread.start();
 
@@ -73,13 +65,6 @@ public final class Game extends JPanel implements ActionListener {
         timer.start();
     }
 
-    /*public void play() throws JavaLayerException {
-        run();
-    }
-
-    private void run() throws JavaLayerException {
-        player.play();
-    }*/
     /**
      *
      * @param g
@@ -144,7 +129,6 @@ public final class Game extends JPanel implements ActionListener {
 
     private class KeyBoardAdapter extends KeyAdapter {
 
-        //boolean keyPressed = false;
         @Override
         public void keyPressed(KeyEvent e) {
             
