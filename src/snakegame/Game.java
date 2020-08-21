@@ -1,6 +1,7 @@
 package snakegame;
 
 import java.awt.Color;
+import java.awt.FontFormatException;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -8,6 +9,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
@@ -57,12 +61,16 @@ public final class Game extends JPanel implements ActionListener {
         gameStatus = Constants.IN_MENU;
 
         musicPlayer = new MusicPlayer(screenSize);
-        
+        //musicPlayer.playMusic();
+        /*System.out.println(musicPlayer.getPlayList().getComponent(1).getName());
+        System.out.println(this.getName());*/
         Thread thread = new Thread(musicPlayer);
         thread.start();
 
-        timer = new Timer(delay, this);
+        //musicPlayer.playMusic();
+        timer = new Timer(150, this);
         timer.start();
+
     }
 
     /**
@@ -85,6 +93,14 @@ public final class Game extends JPanel implements ActionListener {
             grid.paint(graficos, screenSize, unitSize);
             food.paint(graficos, screenSize, grid.getGridSize(), unitSize);
             snake.paint(graficos, screenSize, grid.getGridSize(), unitSize);
+        }
+
+        try {
+            musicPlayer.paint(graficos, screenSize, unitSize);
+        } catch (FontFormatException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         g.dispose();
@@ -131,9 +147,9 @@ public final class Game extends JPanel implements ActionListener {
 
         @Override
         public void keyPressed(KeyEvent e) {
-            
+
             musicPlayer.keyPressed(e);
-            
+
             if (gameStatus == Constants.IN_MENU) {
                 menu.keyPressed(e);
             }

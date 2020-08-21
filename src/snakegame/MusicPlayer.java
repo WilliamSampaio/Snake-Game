@@ -5,10 +5,13 @@
 package snakegame;
 
 import jaco.mp3.player.MP3Player;
+import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import javax.swing.BorderFactory;
+import java.io.IOException;
 
 /**
  *
@@ -17,41 +20,72 @@ import javax.swing.BorderFactory;
 public class MusicPlayer implements Runnable {
 
     private MP3Player playList;
-    private String path;
+    private File[] musicsFile;
+    private String[] musicsName;
     private boolean repeat;
     private boolean shuffle;
+    private int currentMusicIndex;
+    private int playListSize;
 
-    public MP3Player getPlayList() {
-        return playList;
-    }
-        
     public MusicPlayer(Point screenSize) {
-        
-        repeat = true;
+
+        repeat = false;
         shuffle = false;
 
         playList = new MP3Player();
         playList.setRepeat(repeat);
         playList.setShuffle(shuffle);
-        
+
         // Creates a new File instance by converting the given pathname string
         // into an abstract pathname
-        path = System.getProperty("user.dir") + "/play-list/";
+        String path = System.getProperty("user.dir") + "/play-list/";
         File f = new File(path);
-        // Populates the array with names of files and directories
-        File[] musics = f.listFiles();
+        // Populates the array with names of files and the files
+        musicsFile = f.listFiles();
+        musicsName = f.list();
 
-        if (musics.length >= 1) {
-            for (int i = 0; i < musics.length; i++) {
-                playList.addToPlayList(musics[i]);
-            }
+        playListSize = musicsName.length;
+
+        if (playListSize >= 1) {
+            currentMusicIndex = 0;
         }
-        
+
+    }
+    
+    public void playMusic() {
+        playList.stop();
+        playList = new MP3Player(musicsFile[currentMusicIndex]);
+        playList.setRepeat(repeat);
+        playList.setShuffle(shuffle);
+        playList.play();
+        if(!playList.isRepeat()){
+            skipForward();
+        }
+    }
+
+    public void skipForward() {
+        if (currentMusicIndex == playListSize - 1) {
+            currentMusicIndex = 0;
+            playMusic();
+        } else {
+            currentMusicIndex += 1;
+            playMusic();
+        }
+    }
+
+    public void skipBackward() {
+        if (currentMusicIndex == 0) {
+            currentMusicIndex = playListSize - 1;
+            playMusic();
+        } else {
+            currentMusicIndex -= 1;
+            playMusic();
+        }
     }
 
     @Override
     public void run() {
-        playList.play();
+        playMusic();
     }
 
     public void keyPressed(KeyEvent key) {
@@ -60,28 +94,47 @@ public class MusicPlayer implements Runnable {
 
         switch (code) {
             case KeyEvent.VK_0:
-                if(playList.isStopped()){
-                    playList.play();
-                }else{
-                    playList.stop();
-                }
                 playList.stop();
                 break;
             case KeyEvent.VK_1:
-                playList.skipBackward();
+                skipBackward();
                 break;
             case KeyEvent.VK_2:
-                if (playList.isPaused()) {
+                if (playList.isPaused() || playList.isStopped()) {
                     playList.play();
                 } else {
                     playList.pause();
                 }
                 break;
             case KeyEvent.VK_3:
-                playList.skipForward();
+                skipForward();
                 break;
+            case KeyEvent.VK_9:
+                if(playList.isRepeat()){
+                    playList.setRepeat(false);
+                }else{
+                    playList.setRepeat(true);
+                }
             default:
                 break;
         }
+    }
+
+    public Graphics2D paint(Graphics2D g, Point screenSize, int unitSize) throws FontFormatException, IOException {
+
+        Graphics2D graficos = (Graphics2D) g;
+
+        Font customFont;
+        customFont = Font.createFont(
+                Font.TRUETYPE_FONT,
+                new File(getClass().getClassLoader().getResource("digital-7.ttf").getFile())).deriveFont((float) unitSize * 2);
+
+        graficos.setFont(customFont);
+
+        int width = graficos.getFontMetrics().stringWidth(musicsName[currentMusicIndex]);
+
+        graficos.drawString(musicsName[currentMusicIndex], (screenSize.x - width) / 2, 2 * unitSize);
+        
+        return graficos;
     }
 }

@@ -5,11 +5,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
-import java.net.URL;
-import java.util.List;
-import java.util.Random;
 import javax.swing.ImageIcon;
 
 public class Menu {
