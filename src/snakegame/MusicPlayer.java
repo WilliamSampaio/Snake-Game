@@ -51,16 +51,18 @@ public class MusicPlayer implements Runnable {
         }
 
     }
-    
+
     public void playMusic() {
         playList.stop();
         playList = new MP3Player(musicsFile[currentMusicIndex]);
-        playList.setRepeat(repeat);
+        //playList.setRepeat(repeat);
         playList.setShuffle(shuffle);
         playList.play();
-        if(!playList.isRepeat()){
+        /*if(!playList.isRepeat()){
             skipForward();
-        }
+        }else{
+            playMusic();
+        }*/
     }
 
     public void skipForward() {
@@ -110,11 +112,12 @@ public class MusicPlayer implements Runnable {
                 skipForward();
                 break;
             case KeyEvent.VK_9:
-                if(playList.isRepeat()){
+                if (playList.isRepeat()) {
                     playList.setRepeat(false);
-                }else{
+                } else {
                     playList.setRepeat(true);
                 }
+                System.out.println(playList.isRepeat());
             default:
                 break;
         }
@@ -134,7 +137,7 @@ public class MusicPlayer implements Runnable {
         int width = graficos.getFontMetrics().stringWidth(musicsName[currentMusicIndex]);
 
         graficos.drawString(musicsName[currentMusicIndex], (screenSize.x - width) / 2, 2 * unitSize);
-        
+
         return graficos;
     }
 }

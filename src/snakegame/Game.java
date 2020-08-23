@@ -34,6 +34,10 @@ public final class Game extends JPanel implements ActionListener {
     private int gameStatus;
     private MusicPlayer musicPlayer;
 
+    long start = System.nanoTime();
+    long finish;
+    long timeElapsed = finish - start;
+
     /**
      * Snake game in Java
      *
@@ -64,13 +68,61 @@ public final class Game extends JPanel implements ActionListener {
         //musicPlayer.playMusic();
         /*System.out.println(musicPlayer.getPlayList().getComponent(1).getName());
         System.out.println(this.getName());*/
+
         Thread thread = new Thread(musicPlayer);
         thread.start();
 
         //musicPlayer.playMusic();
-        timer = new Timer(150, this);
+        timer = new Timer(0, this);
         timer.start();
 
+    }
+
+    /**
+     *
+     * @param arg0
+     */
+    @Override
+    public void actionPerformed(ActionEvent arg0) {
+
+        start = finish;
+        finish = System.nanoTime();
+
+        timeElapsed = finish - start;
+        
+        if(timeElapsed / 1000000 > 150){
+            timeElapsed = 150 * 1000000;
+        }
+
+        System.out.println(timeElapsed);
+
+        if (gameStatus == Constants.IN_MENU) {
+
+            switch (menu.getSelectedOption()) {
+                case 1:
+                    gameStatus = Constants.IN_GAME;
+                    break;
+                case 2:
+                    // in comming!
+                    break;
+                case 3:
+                    System.exit(0);
+                    break;
+            }
+        }
+
+        if (gameStatus == Constants.IN_GAME) {
+            if (snake.getSegments().get(0).equals(food.getPosition())) {
+                snake.eat(grid.getGridSize());
+                food.newPosition(grid.getGridSize(), snake.getSegments());
+            } else {
+                if (snake.isAlive()) {
+                    snake.move(grid.getGridSize());
+                }
+            }
+        }
+
+        repaint();
     }
 
     /**
@@ -105,42 +157,6 @@ public final class Game extends JPanel implements ActionListener {
 
         g.dispose();
 
-    }
-
-    /**
-     *
-     * @param arg0
-     */
-    @Override
-    public void actionPerformed(ActionEvent arg0) {
-
-        if (gameStatus == Constants.IN_MENU) {
-
-            switch (menu.getSelectedOption()) {
-                case 1:
-                    gameStatus = Constants.IN_GAME;
-                    break;
-                case 2:
-                    // in comming!
-                    break;
-                case 3:
-                    System.exit(0);
-                    break;
-            }
-        }
-
-        if (gameStatus == Constants.IN_GAME) {
-            if (snake.getSegments().get(0).equals(food.getPosition())) {
-                snake.eat(grid.getGridSize());
-                food.newPosition(grid.getGridSize(), snake.getSegments());
-            } else {
-                if (snake.isAlive()) {
-                    snake.move(grid.getGridSize());
-                }
-            }
-        }
-
-        repaint();
     }
 
     private class KeyBoardAdapter extends KeyAdapter {

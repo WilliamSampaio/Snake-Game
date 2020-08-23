@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
 import javax.swing.JFrame;
+import jplay.Window;
 
 public class SnakeGame extends JFrame {
 
@@ -11,7 +12,7 @@ public class SnakeGame extends JFrame {
 
         // get current screen resolution
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
+        
         // declares and instance an object of type Game
         Game fase;
         fase = new Game(new Point(screenSize.width, screenSize.height));
