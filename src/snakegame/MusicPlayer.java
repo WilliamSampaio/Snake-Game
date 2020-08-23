@@ -24,6 +24,7 @@ public class MusicPlayer implements Runnable {
     private String[] musicsName;
     private boolean repeat;
     private boolean shuffle;
+    private boolean emptyFolder;
     private int currentMusicIndex;
     private int playListSize;
 
@@ -40,29 +41,32 @@ public class MusicPlayer implements Runnable {
         // into an abstract pathname
         String path = System.getProperty("user.dir") + "/play-list/";
         File f = new File(path);
-        // Populates the array with names of files and the files
-        musicsFile = f.listFiles();
-        musicsName = f.list();
 
-        playListSize = musicsName.length;
-
-        if (playListSize >= 1) {
+        if (f.list().length >= 1) {
+            emptyFolder = false;
+            musicsFile = f.listFiles();
+            musicsName = f.list();
+            playListSize = musicsName.length;
             currentMusicIndex = 0;
+        } else {
+            emptyFolder = true;
         }
 
     }
 
     public void playMusic() {
-        playList.stop();
-        playList = new MP3Player(musicsFile[currentMusicIndex]);
-        //playList.setRepeat(repeat);
-        playList.setShuffle(shuffle);
-        playList.play();
-        /*if(!playList.isRepeat()){
-            skipForward();
-        }else{
-            playMusic();
-        }*/
+        if (!emptyFolder) {
+            playList.stop();
+            playList = new MP3Player(musicsFile[currentMusicIndex]);
+            //playList.setRepeat(repeat);
+            playList.setShuffle(shuffle);
+            playList.play();
+            /*if(!playList.isRepeat()){
+                skipForward();
+            }else{
+                playMusic();
+            }*/
+        }
     }
 
     public void skipForward() {
@@ -134,9 +138,13 @@ public class MusicPlayer implements Runnable {
 
         graficos.setFont(customFont);
 
-        int width = graficos.getFontMetrics().stringWidth(musicsName[currentMusicIndex]);
-
-        graficos.drawString(musicsName[currentMusicIndex], (screenSize.x - width) / 2, 2 * unitSize);
+        if (emptyFolder) {
+            int width = graficos.getFontMetrics().stringWidth("no music to play :(");
+            graficos.drawString("no music to play :(", (screenSize.x - width) / 2, 2 * unitSize);
+        } else {
+            int width = graficos.getFontMetrics().stringWidth(musicsName[currentMusicIndex]);
+            graficos.drawString(musicsName[currentMusicIndex], (screenSize.x - width) / 2, 2 * unitSize);
+        }
 
         return graficos;
     }
