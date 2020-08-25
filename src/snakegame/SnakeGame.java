@@ -1,14 +1,16 @@
 package snakegame;
 
 import java.awt.Dimension;
+import java.awt.FontFormatException;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.io.IOException;
 import javax.swing.JFrame;
 import jplay.Window;
 
 public class SnakeGame extends JFrame {
 
-    public SnakeGame() {
+    public SnakeGame() throws IOException, FontFormatException {
 
         // get current screen resolution
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -53,7 +55,7 @@ public class SnakeGame extends JFrame {
         setVisible(true);*/
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, FontFormatException {
 
         // i will really need explain??
         SnakeGame game;

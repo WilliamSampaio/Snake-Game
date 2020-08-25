@@ -13,8 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import jplay.GameImage;
 import jplay.Keyboard;
@@ -174,26 +172,57 @@ public class Menu {
         background.height = gameWindow.getHeight();
         background.width = (aux.width * gameWindow.getHeight()) / aux.height;
         background.x = (gameWindow.getWidth() - background.width) / 2;
-        String path = Constants.RESOURCES + "default/" + Constants.FONTS + "digital-7.ttf";
+        String path = Constants.RESOURCES + "default/" + Constants.FONTS + "digitalix.ttf";
         menuFont = Font.createFont(Font.TRUETYPE_FONT, new File(path)).deriveFont((float) 50 * 2);
         menuOptions = new ArrayList<>();
         menuOptions.add(new Label("NEW GAME", menuFont, Color.BLACK));
+        menuOptions.add(new Label("settings", menuFont, Color.BLACK));
+        menuOptions.add(new Label("aboult", menuFont, Color.BLACK));
+        menuOptions.add(new Label("exit", menuFont, Color.BLACK));
+        option = 0;
     }
 
     private void update() {
+
         gameWindow.update();
+        /*gameWindow.getKeyboard().
+        if (gameKeyboard.keyPressed(KeyEvent.VK_DOWN == gameKeyboard.keyDown(KeyEvent.VK_UP))) {
+            option++;
+            if (option == menuOptions.size() - 1) {
+                option = 0;
+            }
+        } else {
+        }
+
+        if (gameKeyboard.keyPressed(Keyboard.UP_KEY)) {
+            option--;
+            if (option < 0) {
+                option = menuOptions.size() - 1;
+            }
+        }*/
     }
 
     private void draw() {
         background.draw();
-        /*gameWindow.getGameGraphics().setColor(Color.BLUE);
-        gameWindow.getGameGraphics().setFont(menuFont);*/
 
         for (int i = 0; i < menuOptions.size(); i++) {
             Label l = menuOptions.get(i);
-            gameWindow.drawText(l.getLabel(), (gameWindow.getWidth() - l.width) / 2, gameWindow.getHeight() / 2, l.getColor(), l.getFont());
-            //gameWindow.getGameGraphics().drawRect(0, 0, 200, 200);
-            //gameWindow.getGameGraphics().drawString(l.getLabel(), gameWindow.getWidth() / 2, gameWindow.getHeight() / 2);
+            if (i == option) {
+                gameWindow.drawText(
+                        l.getLabel(),
+                        (gameWindow.getWidth() - l.width) / 2,
+                        ((gameWindow.getHeight() - (l.height * (menuOptions.size() - 1))) / 2) + (i * l.height/* + 15*/),
+                        Color.BLUE,
+                        l.getFont());
+            } else {
+                gameWindow.drawText(
+                        l.getLabel(),
+                        (gameWindow.getWidth() - l.width) / 2,
+                        ((gameWindow.getHeight() - (l.height * (menuOptions.size() - 1))) / 2) + (i * l.height),
+                        l.getColor(),
+                        l.getFont());
+            }
+
         }
     }
 
