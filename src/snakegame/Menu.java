@@ -17,6 +17,7 @@ import javax.swing.ImageIcon;
 import jplay.GameImage;
 import jplay.Keyboard;
 import jplay.Mouse;
+import jplay.Sprite;
 import jplay.Window;
 
 public class Menu {
@@ -27,7 +28,8 @@ public class Menu {
 
     private GameImage background;
     private Font menuFont;
-    private List<Label> menuOptions;
+    //private List<Label> menuOptions;
+    private List<Sprite> menuOptions;
 
     private Point position;
     private Point dimension;
@@ -173,20 +175,26 @@ public class Menu {
         background.width = (aux.width * gameWindow.getHeight()) / aux.height;
         background.x = (gameWindow.getWidth() - background.width) / 2;
         String path = Constants.RESOURCES + "default/" + Constants.FONTS + "digitalix.ttf";
-        menuFont = Font.createFont(Font.TRUETYPE_FONT, new File(path)).deriveFont((float) 50 * 2);
+        menuFont = Font.createFont(Font.TRUETYPE_FONT, new File(path)).deriveFont((float) 48 * 2);
         menuOptions = new ArrayList<>();
-        menuOptions.add(new Label("NEW GAME", menuFont, Color.BLACK));
-        menuOptions.add(new Label("settings", menuFont, Color.BLACK));
-        menuOptions.add(new Label("aboult", menuFont, Color.BLACK));
-        menuOptions.add(new Label("exit", menuFont, Color.BLACK));
+        /*menuOptions.add(new Label("NEW GAME", menuFont, Color.BLACK));
+        menuOptions.add(new Label("SETTINGS", menuFont, Color.BLACK));
+        menuOptions.add(new Label("ABOULT", menuFont, Color.BLACK));
+        menuOptions.add(new Label("EXIT", menuFont, Color.BLACK));*/
+        menuOptions.add(new Sprite(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu_newgame.png", 2));
+        menuOptions.add(new Sprite(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu_about.png", 2));
+        menuOptions.add(new Sprite(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu_exit.png", 2));
+        /*menuOptions.add(new Label("SETTINGS", menuFont, Color.BLACK));
+        menuOptions.add(new Label("ABOULT", menuFont, Color.BLACK));
+        menuOptions.add(new Label("EXIT", menuFont, Color.BLACK));*/
         option = 0;
     }
 
     private void update() {
 
         gameWindow.update();
-        /*gameWindow.getKeyboard().
-        if (gameKeyboard.keyPressed(KeyEvent.VK_DOWN == gameKeyboard.keyDown(KeyEvent.VK_UP))) {
+        //gameWindow.getKeyboard().
+        if (gameKeyboard.keyDown(Keyboard.DOWN_KEY)) {
             option++;
             if (option == menuOptions.size() - 1) {
                 option = 0;
@@ -194,36 +202,59 @@ public class Menu {
         } else {
         }
 
-        if (gameKeyboard.keyPressed(Keyboard.UP_KEY)) {
+        if (gameKeyboard.keyDown(Keyboard.UP_KEY)) {
             option--;
             if (option < 0) {
                 option = menuOptions.size() - 1;
             }
-        }*/
-    }
-
-    private void draw() {
-        background.draw();
-
-        for (int i = 0; i < menuOptions.size(); i++) {
-            Label l = menuOptions.get(i);
-            if (i == option) {
-                gameWindow.drawText(
-                        l.getLabel(),
-                        (gameWindow.getWidth() - l.width) / 2,
-                        ((gameWindow.getHeight() - (l.height * (menuOptions.size() - 1))) / 2) + (i * l.height/* + 15*/),
-                        Color.BLUE,
-                        l.getFont());
-            } else {
-                gameWindow.drawText(
-                        l.getLabel(),
-                        (gameWindow.getWidth() - l.width) / 2,
-                        ((gameWindow.getHeight() - (l.height * (menuOptions.size() - 1))) / 2) + (i * l.height),
-                        l.getColor(),
-                        l.getFont());
-            }
-
         }
     }
 
+    private void draw() {
+        gameWindow.getGameGraphics().setColor(new Color(137, 151, 116));
+        gameWindow.getGameGraphics().fillRect(0, 0, gameWindow.getWidth(), gameWindow.getHeight());
+        background.draw();
+
+        for (int i = 0; i < menuOptions.size(); i++) {
+            
+            menuOptions.get(i).x = (gameWindow.getWidth() - menuOptions.get(i).width) / 2;
+            menuOptions.get(i).y = ((gameWindow.getHeight() - (menuOptions.size() * menuOptions.get(i).height)) / 2) + i * menuOptions.get(i).height;
+            
+            if(option == i){
+                
+                menuOptions.get(i).setCurrFrame(1);
+                menuOptions.get(i).draw();
+            }else{
+                menuOptions.get(i).setCurrFrame(0);
+                menuOptions.get(i).draw();
+            }
+            
+            
+            
+            /*Label l = menuOptions.get(i);
+
+            if (i == option) {
+                gameWindow.getGameGraphics().setColor(l.getColor());
+                gameWindow.getGameGraphics().fillRect(
+                        (gameWindow.getWidth() - l.width) / 2,
+                        (gameWindow.getHeight() - (l.height * (menuOptions.size() - 1))) / 2,
+                        //((gameWindow.getHeight() - ((l.height + l.height / 2) * (menuOptions.size() - 1))) / 2), // Y position
+                        l.width,
+                        l.height);
+                gameWindow.drawText(
+                        l.getLabel(), //string text
+                        (gameWindow.getWidth() - l.width) / 2, // X position
+                        ((gameWindow.getHeight() - ((l.height + l.height / 2) * (menuOptions.size() - 1))) / 2) + (i * (l.height + l.height / 2)), // Y position
+                        new Color(137, 151, 116), // font color
+                        l.getFont()); // set font
+            }else{
+                gameWindow.drawText(
+                        l.getLabel(), //string text
+                        (gameWindow.getWidth() - l.width) / 2, // X position
+                        ((gameWindow.getHeight() - ((l.height + l.height / 2) * (menuOptions.size() - 1))) / 2) + (i * (l.height + l.height / 2)), // Y position
+                        l.getColor(), // font color
+                        l.getFont()); // set font
+            }*/
+        }
+    }
 }
