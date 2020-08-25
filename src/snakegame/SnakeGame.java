@@ -13,7 +13,14 @@ public class SnakeGame extends JFrame {
         // get current screen resolution
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         
-        // declares and instance an object of type Game
+        Window gameWindow = new Window(screenSize.width, screenSize.height);
+        Menu menu = new Menu(gameWindow);
+        
+        /**
+         * OLD CODE
+         */
+        
+        /*// declares and instance an object of type Game
         Game fase;
         fase = new Game(new Point(screenSize.width, screenSize.height));
         //fase = new Game(new Point(800, 600));
@@ -43,7 +50,7 @@ public class SnakeGame extends JFrame {
         setLocationRelativeTo(null);
 
         // sets window as visible
-        setVisible(true);
+        setVisible(true);*/
     }
 
     public static void main(String[] args) {

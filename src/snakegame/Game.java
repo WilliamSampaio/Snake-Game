@@ -51,7 +51,7 @@ public final class Game extends JPanel implements ActionListener {
         this.screenSize = screenSize;
         unitSize = screenSize.y / 50;
 
-        menu = new Menu(screenSize, unitSize);
+       // menu = new Menu(screenSize, unitSize);
 
         grid = new Grid(new Point(30, 40), new Color(137, 151, 116));
         snake = new Snake(Constants.RIGHT, Color.BLACK, Color.DARK_GRAY);
