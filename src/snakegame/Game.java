@@ -19,7 +19,7 @@ import javax.swing.Timer;
  *
  * @author William Benjamim Menezes Sampaio
  */
-public final class Game extends JPanel implements ActionListener {
+public final class Game/* extends JPanel implements ActionListener */{
 
     private Menu menu;
     private Grid grid;
@@ -45,9 +45,9 @@ public final class Game extends JPanel implements ActionListener {
      */
     public Game(Point screenSize) {
 
-        setFocusable(true);
+        /*setFocusable(true);
         setDoubleBuffered(true);
-        addKeyListener(new KeyBoardAdapter());
+        addKeyListener(new KeyBoardAdapter());*/
         this.screenSize = screenSize;
         unitSize = screenSize.y / 50;
 
@@ -73,8 +73,8 @@ public final class Game extends JPanel implements ActionListener {
         thread.start();
 
         //musicPlayer.playMusic();
-        timer = new Timer(0, this);
-        timer.start();
+        /*timer = new Timer(0, this);
+        timer.start();*/
 
     }
 
@@ -82,7 +82,7 @@ public final class Game extends JPanel implements ActionListener {
      *
      * @param arg0
      */
-    @Override
+    /*@Override
     public void actionPerformed(ActionEvent arg0) {
 
         start = finish;
@@ -128,7 +128,7 @@ public final class Game extends JPanel implements ActionListener {
     /**
      *
      * @param g
-     */
+     *//*
     @Override
     public void paint(Graphics g) {
 
@@ -157,7 +157,7 @@ public final class Game extends JPanel implements ActionListener {
 
         g.dispose();
 
-    }
+    }*/
 
     private class KeyBoardAdapter extends KeyAdapter {
 
@@ -167,7 +167,7 @@ public final class Game extends JPanel implements ActionListener {
             musicPlayer.keyPressed(e);
 
             if (gameStatus == Constants.IN_MENU) {
-                menu.keyPressed(e);
+                //menu.keyPressed(e);
             }
 
             if (gameStatus == Constants.IN_GAME) {
