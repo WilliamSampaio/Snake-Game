@@ -47,11 +47,19 @@ public class Button {
     }
 
     public void draw() {
-        if (gameWindow.getMouse().isOverObject(button)) {
+        /*if (gameWindow.getMouse().isOverObject(button)) {
             gameWindow.getGameGraphics().drawImage(image2, (int) button.x, (int) button.y, button.width, button.height, null);
-        } else {
+        } else {*/
+        gameWindow.getGameGraphics().drawImage(image1, (int) button.x, (int) button.y, button.width, button.height, null);
+        //}
+    }
+
+    public void drawSelected() {
+        /*if (gameWindow.getMouse().isOverObject(button)) {*/
+        gameWindow.getGameGraphics().drawImage(image2, (int) button.x, (int) button.y, button.width, button.height, null);
+        /*} else {
             gameWindow.getGameGraphics().drawImage(image1, (int) button.x, (int) button.y, button.width, button.height, null);
-        }
+        }*/
     }
 
     public boolean isMouseOn() {

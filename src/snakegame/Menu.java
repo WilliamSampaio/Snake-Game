@@ -7,6 +7,7 @@ import java.awt.FontFormatException;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,29 +28,10 @@ public class Menu {
     private Window gameWindow;
     private Keyboard gameKeyboard;
     private Mouse gameMouse;
-
     private GameImage background;
     //private Font menuFont;
     private List<Button> options;
-
     private int option;
-    private int selectedOption;
-
-    /**
-     *
-     * @return
-     */
-    public int getOption() {
-        return option;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public int getSelectedOption() {
-        return selectedOption;
-    }
 
     /**
      *
@@ -58,82 +40,11 @@ public class Menu {
      * @throws FontFormatException
      */
     public Menu(Window gameWindow) throws IOException, FontFormatException {
-
+        // get the game instance
         this.gameWindow = gameWindow;
-        gameKeyboard = this.gameWindow.getKeyboard();
-        gameMouse = this.gameWindow.getMouse();
+        
+        // run the game
         run();
-
-    }
-
-    /**
-     *
-     */
-    public void nextOption() {
-
-        switch (option) {
-            case 1:
-                option = 2;
-                break;
-            case 2:
-                option = 3;
-                break;
-            default:
-                option = 1;
-                break;
-        }
-
-    }
-
-    /**
-     *
-     */
-    public void previousOption() {
-
-        switch (option) {
-            case 1:
-                option = 3;
-                break;
-            case 2:
-                option = 1;
-                break;
-            default:
-                option = 2;
-                break;
-        }
-
-    }
-
-    /**
-     *
-     * @param key
-     */
-    public void keyPressed(KeyEvent key) {
-
-        int code = key.getKeyCode();
-
-        if (code == KeyEvent.VK_UP || code == KeyEvent.VK_W) {
-            previousOption();
-        }
-
-        if (code == KeyEvent.VK_DOWN || code == KeyEvent.VK_S) {
-            nextOption();
-        }
-
-        if (code == KeyEvent.VK_ENTER) {
-            switch (option) {
-                case 1:
-                    selectedOption = 1;
-                    break;
-                case 2:
-                    selectedOption = 2;
-                    break;
-                case 3:
-                    selectedOption = 3;
-                    break;
-            }
-        }
-
     }
 
     private void run() throws FontFormatException, IOException {
@@ -150,6 +61,16 @@ public class Menu {
     }
 
     private void load() throws FontFormatException, IOException, IOException {
+        // initialize the keyboard and add keys
+        gameKeyboard = gameWindow.getKeyboard();
+        gameKeyboard.addKey(KeyEvent.VK_W);
+        gameKeyboard.addKey(KeyEvent.VK_S);
+        gameKeyboard.addKey(KeyEvent.VK_UP);
+        gameKeyboard.addKey(KeyEvent.VK_DOWN);
+
+        // initialize the mouse
+        gameMouse = gameWindow.getMouse();
+
         // load and set dimensions and position of the background image
         background = new GameImage(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu.png");
         Dimension aux = new Dimension(background.width, background.height);
@@ -178,16 +99,14 @@ public class Menu {
     }
 
     private void update() {
+        // detect all mouse actions
+        mouseActions();
 
+        // detect all keyboard actions
+        keyboardActions();
+
+        // update the game instance
         gameWindow.update();
-
-        if (gameMouse.isLeftButtonPressed()) {
-            for (int i = 0; i < options.size(); i++) {
-                if (options.get(i).isMouseOn()) {
-                    option = i;
-                }
-            }
-        }
     }
 
     private void draw() {
@@ -201,7 +120,100 @@ public class Menu {
         // loop to draw a menu options
         for (int i = 0; i < options.size(); i++) {
             // draw the menu indexed option
-            options.get(i).draw();
+            if (option == i) {
+                options.get(i).drawSelected();
+            } else {
+                options.get(i).draw();
+            }
+        }
+    }
+
+    private void exit() {
+        gameWindow.exit();
+    }
+
+    private void mouseActions() {
+        // loop to verify if some option is mouse cursor over. if on, option receive index
+        for (int i = 0; i < options.size(); i++) {
+            if (options.get(i).isMouseOn()) {
+                option = i;
+            }
+        }
+
+        // verify if mouse left button has pressed
+        if (gameMouse.isLeftButtonPressed()) {
+            // loop to verify if left mouse has pressed over some option
+            for (int i = 0; i < options.size(); i++) {
+                if (options.get(i).isMouseOn()) {
+                    switch (i) {
+                        case 0:
+                            new Game(gameWindow);
+                            break;
+                        case 1:
+                            break;
+                        case 2:
+                            exit();
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+    private void keyboardActions() {
+        // if ENTER was pressed verify which option is selected and run
+        if (gameKeyboard.keyDown(Keyboard.ENTER_KEY)) {
+            switch (option) {
+                case 0:
+                    new Game(gameWindow);
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    exit();
+                    break;
+            }
+        }
+
+        // if W key was pressed option receive the back option
+        if (gameKeyboard.keyDown(KeyEvent.VK_W)) {
+            if (option == 0) {
+                option = options.size() - 1;
+            } else {
+                option--;
+            }
+        }
+
+        // if UP key was pressed option receive the back option
+        if (gameKeyboard.keyDown(Keyboard.UP_KEY)) {
+            if (option == 0) {
+                option = options.size() - 1;
+            } else {
+                option--;
+            }
+        }
+
+        // if S key was pressed option receive next option
+        if (gameKeyboard.keyDown(KeyEvent.VK_S)) {
+            if (option == options.size() - 1) {
+                option = 0;
+            } else {
+                option++;
+            }
+        }
+
+        // if DOWN key was pressed option receive next option
+        if (gameKeyboard.keyDown(Keyboard.DOWN_KEY)) {
+            if (option == options.size() - 1) {
+                option = 0;
+            } else {
+                option++;
+            }
+        }
+
+        // if ESC key was pressed independent of the option
+        if (gameKeyboard.keyDown(Keyboard.ESCAPE_KEY)) {
+            gameWindow.exit();
         }
     }
 }

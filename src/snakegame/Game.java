@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import jplay.Window;
 
 /**
  *
@@ -76,6 +77,14 @@ public final class Game/* extends JPanel implements ActionListener */{
         /*timer = new Timer(0, this);
         timer.start();*/
 
+    }
+
+    Game(Window gameWindow) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    void run() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     /**
