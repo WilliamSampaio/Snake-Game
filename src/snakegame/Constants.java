@@ -17,8 +17,9 @@ public class Constants {
     static final int RIGHT = 4;
     static final int DOWN = 5;
     static final int LEFT = 6;
-    static String RESOURCES = "resources/";
-    static String SPRITES = "sprites/";
-    static String FONTS = "fonts/";
+
+    static String SPRITES = "resources/sprites/";
+    static String FONTS = "resources/fonts/";
+    static String DATA = "resources/data/";
 
 }

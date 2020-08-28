@@ -3,12 +3,15 @@ package snakegame;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.parsers.ParserConfigurationException;
 import jplay.GameImage;
 import jplay.Keyboard;
 import jplay.Mouse;
 import jplay.Window;
+import org.xml.sax.SAXException;
 
 /**
  *
@@ -35,7 +38,7 @@ public class Menu {
         this.gameWindow = gameWindow;
     }
 
-    public void run() {
+    public void run() throws SAXException, IOException, ParserConfigurationException {
         // call load function that load all files and other things referred the menu
         load();
 
@@ -48,7 +51,7 @@ public class Menu {
         }
     }
 
-    private void load() {
+    private void load() throws IOException {
         // initialize the keyboard and add keys
         gameKeyboard = gameWindow.getKeyboard();
         gameKeyboard.addKey(KeyEvent.VK_W);
@@ -60,7 +63,8 @@ public class Menu {
         gameMouse = gameWindow.getMouse();
 
         // load and set dimensions and position of the background image
-        background = new GameImage(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu.png");
+        //background = new GameImage(getClass().getResource("/sprites/menu.png").getPath());
+        background = new GameImage(Constants.SPRITES + "menu.png");
         Dimension aux = new Dimension(background.width, background.height);
         background.height = gameWindow.getHeight();
         background.width = (aux.width * gameWindow.getHeight()) / aux.height;
@@ -70,9 +74,16 @@ public class Menu {
         menuFont = Font.createFont(Font.TRUETYPE_FONT, new File(path)).deriveFont((float) 48 * 2);*/
         // initialize and add buttons to menu options
         options = new ArrayList<>();
-        options.add(new Button(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu_opt_0.png", gameWindow));
+        /*options.add(new Button(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu_opt_0.png", gameWindow));
         options.add(new Button(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu_opt_1.png", gameWindow));
-        options.add(new Button(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu_opt_2.png", gameWindow));
+        options.add(new Button(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu_opt_2.png", gameWindow));*/
+        /*options.add(new Button(getClass().getResource("/sprites/menu_opt_0.png").getPath(), gameWindow));
+        options.add(new Button(getClass().getResource("/sprites/menu_opt_1.png").getPath(), gameWindow));
+        options.add(new Button(getClass().getResource("/sprites/menu_opt_2.png").getPath(), gameWindow));*/
+        options.add(new Button(Constants.SPRITES + "menu_opt_0.png", gameWindow));
+        options.add(new Button(Constants.SPRITES + "menu_opt_1.png", gameWindow));
+        options.add(new Button(Constants.SPRITES + "menu_opt_2.png", gameWindow));
+        
 
         // loop to set the size and the position of the buttons
         for (int i = 0; i < options.size(); i++) {
@@ -86,7 +97,7 @@ public class Menu {
         option = 0;
     }
 
-    private void update() {
+    private void update() throws SAXException, IOException, ParserConfigurationException {
         // detect all mouse actions
         mouseActions();
 
@@ -119,7 +130,7 @@ public class Menu {
         gameWindow.exit();
     }
 
-    private void mouseActions() {
+    private void mouseActions() throws SAXException, IOException, ParserConfigurationException {
         // loop to verify if some option is mouse cursor over. if on, option receive index
         for (int i = 0; i < options.size(); i++) {
             if (options.get(i).isMouseOn()) {
@@ -147,7 +158,7 @@ public class Menu {
         }
     }
 
-    private void keyboardActions() {
+    private void keyboardActions() throws SAXException, IOException, ParserConfigurationException {
         // if ENTER was pressed verify which option is selected and run
         if (gameKeyboard.keyDown(Keyboard.ENTER_KEY)) {
             switch (option) {

@@ -9,13 +9,21 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import jplay.Keyboard;
 import jplay.Window;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
- * @author William Benjamim Menezes Sampaio GitHub
- * https://github.com/WilliamSampaio E-mail williambenjamimms97@gmail.com
+ * @author William Benjamim Menezes Sampaio
+ * @link    https://github.com/WilliamSampaio
+ * @link    williambenjamimms97@gmail.com
  */
 public final class Game {
 
@@ -39,6 +47,8 @@ public final class Game {
 
     private int delay;
     private Font menuFont;
+
+    private Document ranking;
 
     /**
      * Snake game in Java
@@ -80,7 +90,7 @@ public final class Game {
         this.gameWindow = gameWindow;
     }
 
-    public void run() {
+    public void run() throws SAXException, IOException, ParserConfigurationException {
         // call load function that load all files and other things referred the menu
         load();
 
@@ -93,20 +103,20 @@ public final class Game {
         }
     }
 
-    private void load() {
+    private void load() throws SAXException, IOException, ParserConfigurationException {
         gameKeyboard = gameWindow.getKeyboard();
         gameKeyboard.addKey(KeyEvent.VK_P);
         gameKeyboard.addKey(KeyEvent.VK_M);
 
         unitSize = gameWindow.getHeight() / 30;
-        String imagePath = Constants.RESOURCES + "default/" + Constants.SPRITES + "unit_off.png";
-        grid = new Grid(new Point(15, 20), imagePath, new Color(137, 151, 116));
+        //String imagePath = Constants.RESOURCES + "default/" + Constants.SPRITES + "unit_off.png";
+        grid = new Grid(new Point(15, 20), Constants.SPRITES + "unit_off.png", new Color(137, 151, 116));
         //snake = new Snake(Constants.RIGHT, Color.BLACK, Color.DARK_GRAY);
-        imagePath = Constants.RESOURCES + "default/" + Constants.SPRITES + "unit_on.png";
-        snake = new Snake(Constants.RIGHT, imagePath);
+        //imagePath = Constants.RESOURCES + "default/" + Constants.SPRITES + "unit_on.png";
+        snake = new Snake(Constants.RIGHT, Constants.SPRITES + "unit_on.png");
         snake.addSegments(grid.getGridSize().x / 2, grid.getGridSize().y / 2);
         //imagePath = Constants.RESOURCES + "default/" + Constants.SPRITES + "unit_on.png";
-        food = new Food(new Point(0, 0), imagePath);
+        food = new Food(new Point(0, 0), Constants.SPRITES + "unit_on.png");
         musicOn = true;
         gameStatus = Constants.IN_GAME;
         delay = 100;
@@ -114,21 +124,33 @@ public final class Game {
         level = 1;
         foodCount = 0;
 
-        String path = Constants.RESOURCES + "default/" + Constants.FONTS + "digital-7.ttf";
+        //String path = Constants.RESOURCES + "default/" + Constants.FONTS + "digital-7.ttf";
         try {
-            menuFont = Font.createFont(Font.TRUETYPE_FONT, new File(path)).deriveFont((float) unitSize * 2);
-        } catch (FontFormatException ex) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
+            menuFont = Font.createFont(Font.TRUETYPE_FONT, new File(Constants.FONTS + "digital-7.ttf")).deriveFont((float) unitSize * 2);
+            //menuFont = Font.createFont(Font.TRUETYPE_FONT, new File(path)).deriveFont((float) unitSize * 2);
+        } catch (FontFormatException | IOException ex) {
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        pauseBtn = new Button(Constants.RESOURCES + "default/" + Constants.SPRITES + "pause_btn.png", gameWindow);
-        musicBtn = new Button(Constants.RESOURCES + "default/" + Constants.SPRITES + "music_btn.png", gameWindow);
+        pauseBtn = new Button(Constants.SPRITES + "pause_btn.png"/* Constants.RESOURCES + "default/" + Constants.SPRITES + "pause_btn.png"*/, gameWindow);
+        musicBtn = new Button(Constants.SPRITES + "music_btn.png"/*Constants.RESOURCES + "default/" + Constants.SPRITES + "music_btn.png"*/, gameWindow);
+
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        ranking = builder.parse(Constants.DATA + "ranking.xml");
+
+        NodeList names = this.ranking.getElementsByTagName("name");
+        Element name = (Element) names.item(0);
+
+        NodeList scores = this.ranking.getElementsByTagName("score");
+        Element score = (Element) scores.item(0);
+
+        System.out.println("NAME: " + name.getTextContent());
+        System.out.println("SCORE: " + score.getTextContent());
 
     }
 
-    private void update() {
+    private void update() throws SAXException, IOException, ParserConfigurationException {
 
         if (gameKeyboard.keyDown(Keyboard.ESCAPE_KEY)) {
             gameWindow.exit();
@@ -143,7 +165,7 @@ public final class Game {
         }
 
         if (gameKeyboard.keyDown(Keyboard.ENTER_KEY)) {
-            if(!snake.isAlive()){
+            if (!snake.isAlive()) {
                 run();
             }
         }
