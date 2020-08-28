@@ -17,6 +17,11 @@ public class Snake {
     private int direction;
     private boolean keyPressed;
     private GameImage snake;
+    private boolean pause;
+
+    public boolean isPause() {
+        return pause;
+    }
 
     public List<Point> getSegments() {
         return segments;
@@ -41,6 +46,7 @@ public class Snake {
         segments = new ArrayList<>();
         keyPressed = false;
         this.alive = true;
+        pause = false;
     }
 
     public Snake(int direction, String imagePath) {
@@ -56,38 +62,40 @@ public class Snake {
     public void move(Point gridSize) {
         Point newPos;
         if (alive) {
-            switch (direction) {
-                case Constants.LEFT:
-                    if (segments.get(0).x == 0) {
-                        newPos = new Point(gridSize.x - 1, segments.get(0).y);
-                    } else {
-                        newPos = new Point(segments.get(0).x - 1, segments.get(0).y);
-                    }
-                    break;
-                case Constants.RIGHT:
-                    if (segments.get(0).x == (gridSize.x - 1)) {
-                        newPos = new Point(0, segments.get(0).y);
-                    } else {
-                        newPos = new Point(segments.get(0).x + 1, segments.get(0).y);
-                    }
-                    break;
-                case Constants.UP:
-                    if (segments.get(0).y == 0) {
-                        newPos = new Point(segments.get(0).x, gridSize.y - 1);
-                    } else {
-                        newPos = new Point(segments.get(0).x, segments.get(0).y - 1);
-                    }
-                    break;
-                default:
-                    if (segments.get(0).y == (gridSize.y - 1)) {
-                        newPos = new Point(segments.get(0).x, 0);
-                    } else {
-                        newPos = new Point(segments.get(0).x, segments.get(0).y + 1);
-                    }
-                    break;
+            if (!pause) {
+                switch (direction) {
+                    case Constants.LEFT:
+                        if (segments.get(0).x == 0) {
+                            newPos = new Point(gridSize.x - 1, segments.get(0).y);
+                        } else {
+                            newPos = new Point(segments.get(0).x - 1, segments.get(0).y);
+                        }
+                        break;
+                    case Constants.RIGHT:
+                        if (segments.get(0).x == (gridSize.x - 1)) {
+                            newPos = new Point(0, segments.get(0).y);
+                        } else {
+                            newPos = new Point(segments.get(0).x + 1, segments.get(0).y);
+                        }
+                        break;
+                    case Constants.UP:
+                        if (segments.get(0).y == 0) {
+                            newPos = new Point(segments.get(0).x, gridSize.y - 1);
+                        } else {
+                            newPos = new Point(segments.get(0).x, segments.get(0).y - 1);
+                        }
+                        break;
+                    default:
+                        if (segments.get(0).y == (gridSize.y - 1)) {
+                            newPos = new Point(segments.get(0).x, 0);
+                        } else {
+                            newPos = new Point(segments.get(0).x, segments.get(0).y + 1);
+                        }
+                        break;
+                }
+                segments.remove(segments.size() - 1);
+                segments.add(0, newPos);
             }
-            segments.remove(segments.size() - 1);
-            segments.add(0, newPos);
         }
         checkSelfCollision();
         keyPressed = false;
@@ -167,7 +175,21 @@ public class Snake {
 
     }
 
+    public void pause() {
+        if (pause) {
+            pause = false;
+        } else {
+            pause = true;
+        }
+    }
+
     public void keyboardActions(Keyboard gameKeyboard) {
+        //gameKeyboard.addKey(KeyEvent.VK_P);
+
+        if (gameKeyboard.keyDown(KeyEvent.VK_P)) {
+            pause();
+        }
+
         if (gameKeyboard.keyDown(Keyboard.UP_KEY)) {
             if (direction != Constants.DOWN) {
                 direction = Constants.UP;

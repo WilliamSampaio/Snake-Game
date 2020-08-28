@@ -34,20 +34,20 @@ public class Label extends GameObject {
         return label;
     }
 
+    public void setLabel(String label) {
+        this.label = label;
+        this.width = (int) font.getStringBounds(label, new FontRenderContext() {
+        }).getWidth();
+        this.height = (int) font.getStringBounds(label, new FontRenderContext() {
+        }).getHeight();
+    }
+
     public Font getFont() {
         return font;
     }
 
     public Color getColor() {
         return color;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public int getHeight() {
-        return height;
     }
 
 }

@@ -12,7 +12,7 @@ import jplay.Window;
 
 /**
  *
- * @author William Benjamim Menezes Sampaio
+ * @author  William Benjamim Menezes Sampaio
  * @link    https://github.com/WilliamSampaio
  * @link    williambenjamimms97@gmail.com
  */
