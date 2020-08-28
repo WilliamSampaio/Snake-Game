@@ -4,10 +4,10 @@ Here comes the text of your license
 Each line should be prefixed with 
 -->
 
-
-<root>
-    <ranking>
+<ranking>
+    <size>1</size>
+    <player>
         <name>Bonner</name>
         <score>9999</score>
-    </ranking>    
-</root>
+    </player>
+</ranking>

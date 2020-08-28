@@ -211,7 +211,7 @@ public class Menu {
 
         // if ESC key was pressed independent of the option
         if (gameKeyboard.keyDown(Keyboard.ESCAPE_KEY)) {
-            gameWindow.exit();
+            //gameWindow.exit();
         }
     }
 }

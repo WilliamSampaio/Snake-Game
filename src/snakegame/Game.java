@@ -48,6 +48,8 @@ public final class Game {
     private int delay;
     private Font menuFont;
 
+    private MenuInGame inGame;
+
     private Document ranking;
 
     /**
@@ -135,6 +137,8 @@ public final class Game {
         pauseBtn = new Button(Constants.SPRITES + "pause_btn.png"/* Constants.RESOURCES + "default/" + Constants.SPRITES + "pause_btn.png"*/, gameWindow);
         musicBtn = new Button(Constants.SPRITES + "music_btn.png"/*Constants.RESOURCES + "default/" + Constants.SPRITES + "music_btn.png"*/, gameWindow);
 
+        inGame = new MenuInGame(gameWindow, Constants.SPRITES + "menu_ingame.png", new Color(137, 151, 116));
+
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         ranking = builder.parse(Constants.DATA + "ranking.xml");
@@ -153,7 +157,12 @@ public final class Game {
     private void update() throws SAXException, IOException, ParserConfigurationException {
 
         if (gameKeyboard.keyDown(Keyboard.ESCAPE_KEY)) {
-            gameWindow.exit();
+            if (gameStatus == Constants.IN_GAME) {
+                gameStatus = Constants.IN_MENU;
+            } else if (gameStatus == Constants.IN_MENU) {
+                gameStatus = Constants.IN_GAME;
+            }
+
         }
 
         if (gameKeyboard.keyDown(KeyEvent.VK_M)) {
@@ -188,6 +197,15 @@ public final class Game {
                     snake.move(grid.getGridSize());
                 }
             }
+        } else if (gameStatus == Constants.IN_MENU) {
+            /*if (gameKeyboard.keyDown(Keyboard.ESCAPE_KEY)) {
+                if (gameStatus == Constants.IN_GAME) {
+                    gameStatus = Constants.IN_MENU;
+                } else if (gameStatus == Constants.IN_MENU) {
+                    gameStatus = Constants.IN_GAME;
+                }
+
+            }*/
         }
 
         gameWindow.update();
@@ -252,6 +270,10 @@ public final class Game {
             musicBtn.draw();
         } else {
             musicBtn.drawSelected();
+        }
+
+        if (gameStatus == Constants.IN_MENU) {
+            inGame.draw();
         }
     }
 }
