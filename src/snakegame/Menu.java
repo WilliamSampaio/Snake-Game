@@ -2,14 +2,7 @@ package snakegame;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontFormatException;
-import java.awt.Image;
-import java.awt.Point;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import jplay.GameImage;
@@ -25,7 +18,7 @@ import jplay.Window;
  */
 public class Menu {
 
-    private Window gameWindow;
+    private final Window gameWindow;
     private Keyboard gameKeyboard;
     private Mouse gameMouse;
     private GameImage background;
@@ -36,18 +29,13 @@ public class Menu {
     /**
      *
      * @param gameWindow
-     * @throws IOException
-     * @throws FontFormatException
      */
-    public Menu(Window gameWindow) throws IOException, FontFormatException {
+    public Menu(Window gameWindow) {
         // get the game instance
         this.gameWindow = gameWindow;
-        
-        // run the game
-        run();
     }
 
-    private void run() throws FontFormatException, IOException {
+    public void run() {
         // call load function that load all files and other things referred the menu
         load();
 
@@ -60,7 +48,7 @@ public class Menu {
         }
     }
 
-    private void load() throws FontFormatException, IOException, IOException {
+    private void load() {
         // initialize the keyboard and add keys
         gameKeyboard = gameWindow.getKeyboard();
         gameKeyboard.addKey(KeyEvent.VK_W);
@@ -82,9 +70,9 @@ public class Menu {
         menuFont = Font.createFont(Font.TRUETYPE_FONT, new File(path)).deriveFont((float) 48 * 2);*/
         // initialize and add buttons to menu options
         options = new ArrayList<>();
-        options.add(new Button(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu_opt_" + 0 + ".png", gameWindow));
-        options.add(new Button(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu_opt_" + 1 + ".png", gameWindow));
-        options.add(new Button(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu_opt_" + 2 + ".png", gameWindow));
+        options.add(new Button(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu_opt_0.png", gameWindow));
+        options.add(new Button(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu_opt_1.png", gameWindow));
+        options.add(new Button(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu_opt_2.png", gameWindow));
 
         // loop to set the size and the position of the buttons
         for (int i = 0; i < options.size(); i++) {
@@ -110,9 +98,8 @@ public class Menu {
     }
 
     private void draw() {
-        // draws a rectangle behind the background image in a specific color
-        gameWindow.getGameGraphics().setColor(new Color(137, 151, 116));
-        gameWindow.getGameGraphics().fillRect(0, 0, gameWindow.getWidth(), gameWindow.getHeight());
+        // clear the game window and paint with a specific color
+        gameWindow.clear(new Color(137, 151, 116));
 
         // draw a background image
         background.draw();
@@ -147,7 +134,7 @@ public class Menu {
                 if (options.get(i).isMouseOn()) {
                     switch (i) {
                         case 0:
-                            new Game(gameWindow);
+                            new Game(gameWindow).run();
                             break;
                         case 1:
                             break;
@@ -165,7 +152,7 @@ public class Menu {
         if (gameKeyboard.keyDown(Keyboard.ENTER_KEY)) {
             switch (option) {
                 case 0:
-                    new Game(gameWindow);
+                    new Game(gameWindow).run();
                     break;
                 case 1:
                     break;

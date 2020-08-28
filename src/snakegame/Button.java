@@ -4,7 +4,6 @@
  */
 package snakegame;
 
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import jplay.GameObject;
-import jplay.Mouse;
 import jplay.Window;
 
 /**
@@ -47,19 +45,11 @@ public class Button {
     }
 
     public void draw() {
-        /*if (gameWindow.getMouse().isOverObject(button)) {
-            gameWindow.getGameGraphics().drawImage(image2, (int) button.x, (int) button.y, button.width, button.height, null);
-        } else {*/
         gameWindow.getGameGraphics().drawImage(image1, (int) button.x, (int) button.y, button.width, button.height, null);
-        //}
     }
 
     public void drawSelected() {
-        /*if (gameWindow.getMouse().isOverObject(button)) {*/
         gameWindow.getGameGraphics().drawImage(image2, (int) button.x, (int) button.y, button.width, button.height, null);
-        /*} else {
-            gameWindow.getGameGraphics().drawImage(image1, (int) button.x, (int) button.y, button.width, button.height, null);
-        }*/
     }
 
     public boolean isMouseOn() {

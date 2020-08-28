@@ -1,25 +1,23 @@
 package snakegame;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.List;
 import java.util.Random;
+import jplay.GameImage;
+import jplay.Window;
 
 public class Food {
 
-    private Point position;
+    private GameImage food;
+    private Point foodPosition;
 
     public Point getPosition() {
-        return position;
+        return foodPosition;
     }
 
-    public void setPosition(Point position) {
-        this.position = position;
-    }
-
-    public Food(Point initialPos) {
-        position = initialPos;
+    public Food(Point initialPos, String imagePath) {
+        foodPosition = initialPos;
+        food = new GameImage(imagePath);
     }
 
     void newPosition(Point gridSize, List<Point> segments) {
@@ -40,36 +38,15 @@ public class Food {
             }
         }
 
-        position.x = rand.nextInt(rangeX);
-        position.y = rand.nextInt(rangeY);
+        foodPosition = possiblePosition;
     }
 
-    public Graphics2D paint(Graphics2D g, Point screenSize, Point gridSize, int unitSize) {
-
-        Graphics2D graficos = (Graphics2D) g;
-
-        graficos.setColor(Color.BLACK);
-        graficos.fillRect(
-                ((screenSize.x - (gridSize.x * unitSize)) / 2) + (position.x * unitSize),
-                ((screenSize.y - (gridSize.y * unitSize)) / 2) + (position.y * unitSize),
-                unitSize,
-                unitSize);
-
-        graficos.setColor(new Color(137, 151, 116));
-        graficos.fillRect(
-                ((screenSize.x - (gridSize.x * unitSize)) / 2) + (position.x * unitSize) + 1,
-                ((screenSize.y - (gridSize.y * unitSize)) / 2) + (position.y * unitSize) + 1,
-                unitSize - 2,
-                unitSize - 2);
-
-        graficos.setColor(Color.BLACK);
-        graficos.fillRect(
-                ((screenSize.x - (gridSize.x * unitSize)) / 2) + (position.x * unitSize) + 3,
-                ((screenSize.y - (gridSize.y * unitSize)) / 2) + (position.y * unitSize) + 3,
-                unitSize - 6,
-                unitSize - 6);
-
-        return graficos;
+    void draw(Window gameWindow, Point gridSize, int unitSize) {
+        food.width = unitSize;
+        food.height = unitSize;
+        food.x = ((gameWindow.getWidth() / 2 - (gridSize.x * unitSize))) + (foodPosition.x * unitSize);
+        food.y = ((gameWindow.getHeight() - (gridSize.y * unitSize)) / 2) + (foodPosition.y * unitSize);
+        food.draw();
     }
 
 }

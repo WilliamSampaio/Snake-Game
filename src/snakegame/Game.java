@@ -1,43 +1,30 @@
 package snakegame;
 
 import java.awt.Color;
-import java.awt.FontFormatException;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JPanel;
-import javax.swing.Timer;
+import jplay.Keyboard;
 import jplay.Window;
 
 /**
  *
- * @author William Benjamim Menezes Sampaio
+ * @author  William Benjamim Menezes Sampaio
+ * GitHub  https://github.com/WilliamSampaio
+ * E-mail  williambenjamimms97@gmail.com
  */
-public final class Game/* extends JPanel implements ActionListener */{
+public final class Game {
 
-    private Menu menu;
     private Grid grid;
     private Snake snake;
     private Food food;
-    private Timer timer;
-    private int FPS = 50;
     private Point screenSize;
     private int unitSize;
-    private int delay = 250;
     private boolean pause;
     private int gameStatus;
-    private MusicPlayer musicPlayer;
 
-    long start = System.nanoTime();
-    long finish;
-    long timeElapsed = finish - start;
+    private Window gameWindow;
+    private Keyboard gameKeyboard;
+
+    private int delay;
 
     /**
      * Snake game in Java
@@ -50,41 +37,108 @@ public final class Game/* extends JPanel implements ActionListener */{
         setDoubleBuffered(true);
         addKeyListener(new KeyBoardAdapter());*/
         this.screenSize = screenSize;
-        unitSize = screenSize.y / 50;
+        unitSize = screenSize.y / 20;
 
-       // menu = new Menu(screenSize, unitSize);
-
-        grid = new Grid(new Point(30, 40), new Color(137, 151, 116));
+        // menu = new Menu(screenSize, unitSize);
+        //grid = new Grid(new Point(30, 40), new Color(137, 151, 116));
         snake = new Snake(Constants.RIGHT, Color.BLACK, Color.DARK_GRAY);
-        snake.addSegments(new Point(2, 0));
+        /*snake.addSegments(new Point(2, 0));
         snake.addSegments(new Point(1, 0));
-        snake.addSegments(new Point(0, 0));
+        snake.addSegments(new Point(0, 0));*/
 
-        food = new Food(new Point(grid.getGridSize().x / 2, grid.getGridSize().y / 2));
+        //food = new Food(new Point(grid.getGridSize().x / 2, grid.getGridSize().y / 2));
         pause = false;
 
         gameStatus = Constants.IN_MENU;
 
-        musicPlayer = new MusicPlayer(screenSize);
+        //musicPlayer = new MusicPlayer(screenSize);
         //musicPlayer.playMusic();
         /*System.out.println(musicPlayer.getPlayList().getComponent(1).getName());
         System.out.println(this.getName());*/
 
-        Thread thread = new Thread(musicPlayer);
-        thread.start();
-
+ /*Thread thread = new Thread(musicPlayer);
+        thread.start();*/
         //musicPlayer.playMusic();
         /*timer = new Timer(0, this);
         timer.start();*/
-
     }
 
-    Game(Window gameWindow) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Game(Window gameWindow) {
+        this.gameWindow = gameWindow;
     }
 
-    void run() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void run() {
+        // call load function that load all files and other things referred the menu
+        load();
+
+        // menu loop
+        while (true) {
+            // draw in the screen
+            draw();
+            // update function, i really explain it?
+            update();            
+        }
+    }
+
+    private void load() {
+        gameKeyboard = gameWindow.getKeyboard();
+        unitSize = gameWindow.getHeight() / 32;
+        String imagePath = Constants.RESOURCES + "default/" + Constants.SPRITES + "unit_off.png";
+        grid = new Grid(new Point(15, 20), imagePath, new Color(137, 151, 116));
+        //snake = new Snake(Constants.RIGHT, Color.BLACK, Color.DARK_GRAY);
+        imagePath = Constants.RESOURCES + "default/" + Constants.SPRITES + "unit_on.png";
+        snake = new Snake(Constants.RIGHT, imagePath);
+        snake.addSegments(grid.getGridSize().x / 2, grid.getGridSize().y / 2);
+        //imagePath = Constants.RESOURCES + "default/" + Constants.SPRITES + "unit_on.png";
+        food = new Food(new Point(0, 0), imagePath);
+        pause = false;
+        gameStatus = Constants.IN_GAME;
+        delay = 100;
+    }
+
+    private void update() {
+        
+
+        if (gameKeyboard.keyDown(Keyboard.ESCAPE_KEY)) {
+            gameWindow.exit();
+            // new Menu(gameWindow);
+        }
+
+        //if(!snake.isKeyPressed()){
+        snake.keyboardActions(gameKeyboard);
+        //}
+
+        if (gameStatus == Constants.IN_GAME) {
+            if (snake.getSegments().get(0).equals(food.getPosition())) {
+                snake.eat(grid.getGridSize());
+                food.newPosition(grid.getGridSize(), snake.getSegments());
+                //delay += 50;
+            } else {
+                if (snake.isAlive()) {
+                    snake.move(grid.getGridSize());
+                }
+            }
+        }
+
+        
+        //gameWindow.set
+        gameWindow.update();
+        //gameWindow.delay(delay);
+        
+        
+        //gameWindow.delay(1000);
+    }
+
+    private void draw() {
+        gameWindow.clear(new Color(137, 151, 116));
+        //gameWindow.drawText(" teste", gameWindow.getWidth() / 2, gameWindow.getHeight() / 2, Color.yellow);
+        //grid.paint(graficos, screenSize, unitSize);
+        // food.paint(graficos, screenSize, grid.getGridSize(), unitSize);
+        //snake.paint(gameWindow, screenSize, grid.getGridSize(), unitSize);
+        grid.draw(gameWindow, unitSize);
+        food.draw(gameWindow, grid.getGridSize(), unitSize);
+        snake.draw(gameWindow, grid.getGridSize(), unitSize);
+
     }
 
     /**
@@ -168,7 +222,7 @@ public final class Game/* extends JPanel implements ActionListener */{
 
     }*/
 
-    private class KeyBoardAdapter extends KeyAdapter {
+ /*private class KeyBoardAdapter extends KeyAdapter {
 
         @Override
         public void keyPressed(KeyEvent e) {
@@ -200,6 +254,5 @@ public final class Game/* extends JPanel implements ActionListener */{
                 System.exit(0);
             }
         }
-    }
-
+    }*/
 }
