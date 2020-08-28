@@ -24,6 +24,8 @@ public final class Game {
     private Window gameWindow;
     private Keyboard gameKeyboard;
 
+    private int score;
+    
     private int delay;
 
     /**
@@ -94,6 +96,7 @@ public final class Game {
         pause = false;
         gameStatus = Constants.IN_GAME;
         delay = 100;
+        score = 0;
     }
 
     private void update() {
@@ -112,7 +115,7 @@ public final class Game {
             if (snake.getSegments().get(0).equals(food.getPosition())) {
                 snake.eat(grid.getGridSize());
                 food.newPosition(grid.getGridSize(), snake.getSegments());
-                //delay += 50;
+                score += 100;
             } else {
                 if (snake.isAlive()) {
                     snake.move(grid.getGridSize());
@@ -123,7 +126,7 @@ public final class Game {
         
         //gameWindow.set
         gameWindow.update();
-        //gameWindow.delay(delay);
+        gameWindow.delay(delay);
         
         
         //gameWindow.delay(1000);
