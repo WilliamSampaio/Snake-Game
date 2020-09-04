@@ -13,12 +13,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.parsers.ParserConfigurationException;
 import jplay.GameImage;
 import jplay.Keyboard;
 import jplay.Window;
-import org.xml.sax.SAXException;
-import static snakegame.Constants.IN_GAME;
 
 /**
  *
@@ -81,47 +78,7 @@ public class MenuInGame extends Constants {
         }
 
     }
-
-    /*private void mouseActions() {
-        // loop to verify if some option is mouse cursor over. if on, option receive index
-        for (int i = 0; i < options.size(); i++) {
-            if (options.get(i).isMouseOn()) {
-                option = i;
-            }
-        }
-
-        // verify if mouse left button has pressed
-        if (gameWindow.getMouse().isLeftButtonPressed()) {
-            // loop to verify if left mouse has pressed over some option
-            for (int i = 0; i < options.size(); i++) {
-                if (options.get(i).isMouseOn()) {
-                    switch (option) {
-                        case 0:
-                            GAME_STATUS = IN_GAME;
-                            snake.pauseOrPlay();
-                            break;
-                        case 1:
-                            if (MUSIC_STATUS) {
-                                MUSIC_STATUS = false;
-                            } else {
-                                MUSIC_STATUS = true;
-                            }
-                            break;
-                        case 2:
-                            break;
-                        case 3:
-                            Menu menu = new Menu(gameWindow);
-                            menu.run();
-                            break;
-                        case 4:
-                            gameWindow.exit();
-                            break;
-                    }
-                }
-            }
-        }
-    }*/
-
+    
     public void keyboardActions() {
         // if W key was pressed option receive the back option
         if (gameWindow.getKeyboard().keyDown(KeyEvent.VK_W)) {

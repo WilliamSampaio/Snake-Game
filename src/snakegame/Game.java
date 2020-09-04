@@ -66,7 +66,9 @@ public final class Game extends Constants {
     private List<String> playerNames;
     private List<Integer> highScores;
 
-    private Ranking ranking1;
+    private Ranking ranking2;
+    private RankingScreen ranking1;
+    private List<RankElement> rankingList;
 
     public Game(Window gameWindow) {
         this.gameWindow = gameWindow;
@@ -129,17 +131,23 @@ public final class Game extends Constants {
 
         menuInGame = new MenuInGame(gameWindow, DIR_SPRITES + "menu_ingame.png", new Color(137, 151, 116));
 
-        ranking1 = new Ranking(gameWindow, DIR_SPRITES + "ranking.png", new Color(137, 151, 116));
+        ranking1 = new RankingScreen(gameWindow, DIR_SPRITES + "ranking.png");
 
         playerNames = new ArrayList<>();
         highScores = new ArrayList<>();
 
-        // read the ranking.xml file
+        ranking2 = new Ranking(DIR_DATA + "ranking.xml");
+
+        rankingList = new Ranking(DIR_DATA + "ranking.xml").getRankingList();
+
+        HI_SCORE = Integer.parseInt(rankingList.get(0).getPlayerScore());
+
+        /*// read the ranking.xml file
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        ranking = builder.parse(DIR_DATA + "ranking.xml");
+        ranking = builder.parse(DIR_DATA + "ranking.xml");*/
 
-        NodeList players = ranking.getElementsByTagName("player");
+ /*NodeList players = ranking.getElementsByTagName("player");
 
         if (players.getLength() > 0) {
 
@@ -155,8 +163,8 @@ public final class Game extends Constants {
 
             HI_SCORE = highScores.get(highScores.size() - 1);
 
-        }
-        /*Element name = (Element) names.item(0);
+        }*/
+ /*Element name = (Element) names.item(0);
 
         NodeList scores = ranking.getElementsByTagName("SCORE");
         Element SCORE = (Element) scores.item(0);
@@ -244,7 +252,11 @@ public final class Game extends Constants {
 
                 if (highScores.get(highScores.size() - 1) < SCORE) {
                     HI_SCORE = SCORE;
-                    String name = JOptionPane.showInputDialog(gameWindow, "DIGITE SEU NOME:", "kkkkkkk", JOptionPane.PLAIN_MESSAGE);
+                    String name = JOptionPane.showInputDialog(gameWindow, "PLAYER NAME:", null, JOptionPane.PLAIN_MESSAGE);
+                    if (name == null) {
+                        Menu menu = new Menu(gameWindow);
+                        menu.run();
+                    }
                     String newHighScore = Integer.toString(SCORE);
 
                     Element playerTag = ranking.createElement("player");
@@ -267,7 +279,11 @@ public final class Game extends Constants {
             } else if (playerNames.size() == 0) {
 
                 HI_SCORE = SCORE;
-                String name = JOptionPane.showInputDialog(gameWindow, "DIGITE SEU NOME:", null, JOptionPane.PLAIN_MESSAGE);
+                String name = JOptionPane.showInputDialog(gameWindow, "PLAYER NAME:", null, JOptionPane.PLAIN_MESSAGE);
+                if (name == null) {
+                    Menu menu = new Menu(gameWindow);
+                    menu.run();
+                }
                 String newHighScore = Integer.toString(SCORE);
 
                 Element playerTag = ranking.createElement("player");
@@ -307,7 +323,17 @@ public final class Game extends Constants {
         }
 
         if (GAME_STATUS == IN_GAME_RANK) {
+            ranking1.load();
 
+            if (gameKeyboard.keyDown(Keyboard.ESCAPE_KEY) || gameKeyboard.keyDown(Keyboard.ENTER_KEY)) {
+                GAME_STATUS = IN_GAME_MENU;
+            }
+
+            if (gameWindow.getMouse().isLeftButtonPressed()) {
+                if (ranking1.getBackButton().isMouseOn()) {
+                    GAME_STATUS = IN_GAME_MENU;
+                }
+            }
         }
 
         hud.update(SCORE, HI_SCORE, LEVEL);
@@ -315,7 +341,7 @@ public final class Game extends Constants {
 
     }
 
-    private void draw() {
+    private void draw() throws ParserConfigurationException, SAXException, IOException {
         // clear the window with especifc color
         gameWindow.clear(new Color(137, 151, 116));
         // draw the grid, food, snake and hud

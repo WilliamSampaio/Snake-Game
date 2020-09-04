@@ -1,1 +1,42 @@
-<?xml version="1.0" encoding="UTF-8"?><ranking><player><name>bonner</name><score>204</score></player><player><name>booooooner</name><score>500</score></player><player><name>test</name><score>700</score></player></ranking>
+<?xml version="1.0" encoding="UTF-8"?><ranking>
+    <player>
+        <name>player1</name>
+        <score>10</score>
+    </player>
+    <player>
+        <name>player2</name>
+        <score>20</score>
+    </player>
+    <player>
+        <name>player3</name>
+        <score>30</score>
+    </player>
+    <player>
+        <name>player4</name>
+        <score>40</score>
+    </player>
+    <player>
+        <name>player5</name>
+        <score>50</score>
+    </player>
+    <player>
+        <name>player6</name>
+        <score>60</score>
+    </player>
+    <player>
+        <name>player7</name>
+        <score>70</score>
+    </player>
+    <player>
+        <name>player8</name>
+        <score>80</score>
+    </player>
+    <player>
+        <name>player9</name>
+        <score>90</score>
+    </player>
+    <player>
+        <name>player10</name>
+        <score>100</score>
+    </player>
+</ranking>
