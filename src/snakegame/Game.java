@@ -4,17 +4,32 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.Point;
+import java.awt.TrayIcon;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import jplay.Keyboard;
 import jplay.Window;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
 
 public final class Game extends Constants {
@@ -30,6 +45,7 @@ public final class Game extends Constants {
 
     private int GAME_STATUS;
     private int SCORE;
+    private int HI_SCORE;
     private int LEVEL;
     private int FOOD_COUNT;
 
@@ -46,6 +62,11 @@ public final class Game extends Constants {
     private Document ranking;
     private long previusTime;
     private long timer;
+
+    private List<String> playerNames;
+    private List<Integer> highScores;
+
+    private Ranking ranking1;
 
     public Game(Window gameWindow) {
         this.gameWindow = gameWindow;
@@ -90,6 +111,7 @@ public final class Game extends Constants {
         DELAY = 750;
 
         SCORE = 0;
+        HI_SCORE = 0;
         LEVEL = 1;
         FOOD_COUNT = 0;
 
@@ -107,14 +129,36 @@ public final class Game extends Constants {
 
         menuInGame = new MenuInGame(gameWindow, DIR_SPRITES + "menu_ingame.png", new Color(137, 151, 116));
 
-        /*DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        ranking1 = new Ranking(gameWindow, DIR_SPRITES + "ranking.png", new Color(137, 151, 116));
+
+        playerNames = new ArrayList<>();
+        highScores = new ArrayList<>();
+
+        // read the ranking.xml file
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
         ranking = builder.parse(DIR_DATA + "ranking.xml");
 
-        NodeList names = this.ranking.getElementsByTagName("name");
-        Element name = (Element) names.item(0);
+        NodeList players = ranking.getElementsByTagName("player");
 
-        NodeList scores = this.ranking.getElementsByTagName("SCORE");
+        if (players.getLength() > 0) {
+
+            NodeList names = ranking.getElementsByTagName("name");
+            NodeList scores = ranking.getElementsByTagName("score");
+
+            for (int i = 0; i < players.getLength(); i++) {
+
+                playerNames.add(names.item(i).getTextContent());
+                highScores.add(Integer.parseInt(scores.item(i).getTextContent()));
+
+            }
+
+            HI_SCORE = highScores.get(highScores.size() - 1);
+
+        }
+        /*Element name = (Element) names.item(0);
+
+        NodeList scores = ranking.getElementsByTagName("SCORE");
         Element SCORE = (Element) scores.item(0);
 
         System.out.println("NAME: " + name.getTextContent());
@@ -148,7 +192,6 @@ public final class Game extends Constants {
                     snake.eat(grid.getGridSize());
                     food.newPosition(grid.getGridSize(), snake.getSegments());
                     SCORE += 100;
-                    //DELAY -= 50;
                     if (FOOD_COUNT == 9) {
                         LEVEL++;
                         FOOD_COUNT = 0;
@@ -158,11 +201,9 @@ public final class Game extends Constants {
                 } else {
                     if (snake.isAlive()) {
                         snake.move(grid.getGridSize());
+                    } else {
+                        GAME_STATUS = IN_GAME_OVER;
                     }
-                }
-
-                if (gameKeyboard.keyDown(Keyboard.ENTER_KEY) && !snake.isAlive()) {
-                    run();
                 }
 
                 if (gameKeyboard.keyDown(KeyEvent.VK_M)) {
@@ -178,20 +219,98 @@ public final class Game extends Constants {
         }
 
         if (GAME_STATUS == IN_GAME_MENU) {
-            
+
             if (gameKeyboard.keyDown(Keyboard.ESCAPE_KEY)) {
-                
+
                 GAME_STATUS = IN_GAME;
                 snake.pauseOrPlay();
                 previusTime = gameWindow.timeElapsed();
-                
+
             }
 
             menuInGameKeyboardActions();
             menuInGameMouseActions();
         }
 
-        hud.update(SCORE, -1, LEVEL);
+        if (GAME_STATUS == IN_GAME_OVER) {
+
+            DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+            domFactory.setIgnoringComments(true);
+            DocumentBuilder builder = domFactory.newDocumentBuilder();
+            ranking = builder.parse(DIR_DATA + "ranking.xml");
+            Node rootTag = ranking.getFirstChild();
+
+            if (playerNames.size() >= 1) {
+
+                if (highScores.get(highScores.size() - 1) < SCORE) {
+                    HI_SCORE = SCORE;
+                    String name = JOptionPane.showInputDialog(gameWindow, "DIGITE SEU NOME:", "kkkkkkk", JOptionPane.PLAIN_MESSAGE);
+                    String newHighScore = Integer.toString(SCORE);
+
+                    Element playerTag = ranking.createElement("player");
+
+                    Text nameTagValue = ranking.createTextNode(name);
+                    Element nameTag = ranking.createElement("name");
+                    nameTag.appendChild(nameTagValue);
+
+                    Text scoreTagValue = ranking.createTextNode(newHighScore);
+                    Element scoreTag = ranking.createElement("score");
+                    scoreTag.appendChild(scoreTagValue);
+
+                    playerTag.appendChild(nameTag);
+                    playerTag.appendChild(scoreTag);
+
+                    rootTag.appendChild(playerTag);
+
+                }
+
+            } else if (playerNames.size() == 0) {
+
+                HI_SCORE = SCORE;
+                String name = JOptionPane.showInputDialog(gameWindow, "DIGITE SEU NOME:", null, JOptionPane.PLAIN_MESSAGE);
+                String newHighScore = Integer.toString(SCORE);
+
+                Element playerTag = ranking.createElement("player");
+
+                Text nameTagValue = ranking.createTextNode(name);
+                Element nameTag = ranking.createElement("name");
+                nameTag.appendChild(nameTagValue);
+
+                Text scoreTagValue = ranking.createTextNode(newHighScore);
+                Element scoreTag = ranking.createElement("score");
+                scoreTag.appendChild(scoreTagValue);
+
+                playerTag.appendChild(nameTag);
+                playerTag.appendChild(scoreTag);
+
+                rootTag.appendChild(playerTag);
+
+            }
+
+            try {
+                Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                transformer.transform(new DOMSource(rootTag), new StreamResult(new FileOutputStream(DIR_DATA + "ranking.xml")));
+            } catch (TransformerConfigurationException ex) {
+                Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (TransformerException ex) {
+                Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            if (JOptionPane.showConfirmDialog(gameWindow, "PLAY AGAIN??", null, JOptionPane.YES_NO_OPTION) == 0) {
+                previusTime = gameWindow.timeElapsed();
+                run();
+            } else {
+                Menu menu = new Menu(gameWindow);
+                menu.run();
+            }
+
+        }
+
+        if (GAME_STATUS == IN_GAME_RANK) {
+
+        }
+
+        hud.update(SCORE, HI_SCORE, LEVEL);
         gameWindow.update();
 
     }
@@ -225,6 +344,12 @@ public final class Game extends Constants {
             // draw the in game menu
             menuInGame.draw();
         }
+        // if game status is in game menu
+        if (GAME_STATUS == IN_GAME_RANK) {
+            // draw ranking
+            gameWindow.clear(new Color(137, 151, 116));
+            ranking1.draw();
+        }
 
     }
 
@@ -245,6 +370,7 @@ public final class Game extends Constants {
                     }
                     break;
                 case 2:
+                    GAME_STATUS = IN_GAME_RANK;
                     break;
                 case 3:
                     Menu menu = new Menu(gameWindow);
@@ -323,6 +449,7 @@ public final class Game extends Constants {
                         }
                         break;
                     case 2:
+                        GAME_STATUS = IN_GAME_RANK;
                         break;
                     case 3:
                         Menu menu = new Menu(gameWindow);
