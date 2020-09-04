@@ -2,6 +2,7 @@ package snakegame;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FontFormatException;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -15,17 +16,16 @@ import org.xml.sax.SAXException;
 
 /**
  *
- * @author  William Benjamim Menezes Sampaio
+ * @author William Benjamim Menezes Sampaio
  * @link    https://github.com/WilliamSampaio
  * @link    williambenjamimms97@gmail.com
  */
-public class Menu {
+public class Menu extends Constants {
 
     private final Window gameWindow;
     private Keyboard gameKeyboard;
     private Mouse gameMouse;
     private GameImage background;
-    //private Font menuFont;
     private List<Button> options;
     private int option;
 
@@ -38,7 +38,7 @@ public class Menu {
         this.gameWindow = gameWindow;
     }
 
-    public void run() throws SAXException, IOException, ParserConfigurationException {
+    public void run() throws SAXException, IOException, ParserConfigurationException, FontFormatException {
         // call load function that load all files and other things referred the menu
         load();
 
@@ -58,32 +58,24 @@ public class Menu {
         gameKeyboard.addKey(KeyEvent.VK_S);
         gameKeyboard.addKey(KeyEvent.VK_UP);
         gameKeyboard.addKey(KeyEvent.VK_DOWN);
+        gameKeyboard.addKey(KeyEvent.VK_P);
+        gameKeyboard.addKey(KeyEvent.VK_M);
 
         // initialize the mouse
         gameMouse = gameWindow.getMouse();
 
         // load and set dimensions and position of the background image
-        //background = new GameImage(getClass().getResource("/sprites/menu.png").getPath());
-        background = new GameImage(Constants.SPRITES + "menu.png");
+        background = new GameImage(DIR_SPRITES + "menu.png");
         Dimension aux = new Dimension(background.width, background.height);
         background.height = gameWindow.getHeight();
         background.width = (aux.width * gameWindow.getHeight()) / aux.height;
         background.x = (gameWindow.getWidth() - background.width) / 2;
 
-        /*String path = Constants.RESOURCES + "default/" + Constants.FONTS + "digitalix.ttf";
-        menuFont = Font.createFont(Font.TRUETYPE_FONT, new File(path)).deriveFont((float) 48 * 2);*/
         // initialize and add buttons to menu options
         options = new ArrayList<>();
-        /*options.add(new Button(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu_opt_0.png", gameWindow));
-        options.add(new Button(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu_opt_1.png", gameWindow));
-        options.add(new Button(Constants.RESOURCES + "default/" + Constants.SPRITES + "menu_opt_2.png", gameWindow));*/
-        /*options.add(new Button(getClass().getResource("/sprites/menu_opt_0.png").getPath(), gameWindow));
-        options.add(new Button(getClass().getResource("/sprites/menu_opt_1.png").getPath(), gameWindow));
-        options.add(new Button(getClass().getResource("/sprites/menu_opt_2.png").getPath(), gameWindow));*/
-        options.add(new Button(Constants.SPRITES + "menu_opt_0.png", gameWindow));
-        options.add(new Button(Constants.SPRITES + "menu_opt_1.png", gameWindow));
-        options.add(new Button(Constants.SPRITES + "menu_opt_2.png", gameWindow));
-        
+        options.add(new Button(DIR_SPRITES + "menu_opt_0.png", gameWindow));
+        options.add(new Button(DIR_SPRITES + "menu_opt_1.png", gameWindow));
+        options.add(new Button(DIR_SPRITES + "menu_opt_2.png", gameWindow));
 
         // loop to set the size and the position of the buttons
         for (int i = 0; i < options.size(); i++) {
@@ -93,11 +85,12 @@ public class Menu {
             options.get(i).setX((gameWindow.getWidth() - options.get(i).getWidth()) / 2);
             options.get(i).setY(((gameWindow.getHeight() - (options.size() * options.get(i).getHeight())) / 2) + (i * options.get(i).getHeight()));
         }
+
         // initialize with default option selected
         option = 0;
     }
 
-    private void update() throws SAXException, IOException, ParserConfigurationException {
+    private void update() throws SAXException, IOException, ParserConfigurationException, FontFormatException {
         // detect all mouse actions
         mouseActions();
 
@@ -130,7 +123,7 @@ public class Menu {
         gameWindow.exit();
     }
 
-    private void mouseActions() throws SAXException, IOException, ParserConfigurationException {
+    private void mouseActions() throws SAXException, IOException, ParserConfigurationException, FontFormatException {
         // loop to verify if some option is mouse cursor over. if on, option receive index
         for (int i = 0; i < options.size(); i++) {
             if (options.get(i).isMouseOn()) {
@@ -158,7 +151,7 @@ public class Menu {
         }
     }
 
-    private void keyboardActions() throws SAXException, IOException, ParserConfigurationException {
+    private void keyboardActions() throws SAXException, IOException, ParserConfigurationException, FontFormatException {
         // if ENTER was pressed verify which option is selected and run
         if (gameKeyboard.keyDown(Keyboard.ENTER_KEY)) {
             switch (option) {

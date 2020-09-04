@@ -1,7 +1,5 @@
 package snakegame;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
@@ -12,6 +10,9 @@ import jplay.Window;
 
 public class Snake {
 
+    private Window gameWindow;
+    private Point gridSize;
+    private int unitSize;
     private boolean alive;
     private final List<Point> segments;
     private int direction;
@@ -39,20 +40,11 @@ public class Snake {
         return keyPressed;
     }
 
-    public Snake(int direction, Color alive, Color die) {
+    public Snake(Window gameWindow, Point gridSize, int unitSize, int direction, String imagePath) {
+        this.gameWindow = gameWindow;
+        this.gridSize = gridSize;
+        this.unitSize = unitSize;
         this.direction = direction;
-        /*colorAlive = alive;
-        colorDie = die;*/
-        segments = new ArrayList<>();
-        keyPressed = false;
-        this.alive = true;
-        pause = false;
-    }
-
-    public Snake(int direction, String imagePath) {
-        this.direction = direction;
-        /*colorAlive = Color.BLACK;
-        colorDie = Color.BLACK;*/
         snake = new GameImage(imagePath);
         segments = new ArrayList<>();
         keyPressed = false;
@@ -145,7 +137,7 @@ public class Snake {
         }
     }
 
-    public void keyPressed(KeyEvent key) {
+    /*public void keyPressed(KeyEvent key) {
 
         int code = key.getKeyCode();
 
@@ -173,9 +165,9 @@ public class Snake {
             }
         }
 
-    }
+    }*/
 
-    public void pause() {
+    public void pauseOrPlay() {
         if (pause) {
             pause = false;
         } else {
@@ -184,13 +176,13 @@ public class Snake {
     }
 
     public void keyboardActions(Keyboard gameKeyboard) {
-        //gameKeyboard.addKey(KeyEvent.VK_P);
+        gameKeyboard.addKey(KeyEvent.VK_W);
 
         if (gameKeyboard.keyDown(KeyEvent.VK_P)) {
-            pause();
+            pauseOrPlay();
         }
 
-        if (gameKeyboard.keyDown(Keyboard.UP_KEY)) {
+        if (gameKeyboard.keyDown(Keyboard.UP_KEY) || gameKeyboard.keyDown(KeyEvent.VK_W)) {
             if (direction != Constants.DOWN) {
                 direction = Constants.UP;
             }
@@ -216,7 +208,7 @@ public class Snake {
         keyPressed = true;
     }
 
-    public void draw(Window gameWindow, Point gridSize, int unitSize) {
+    public void draw() {
 
         snake.width = unitSize;
         snake.height = unitSize;

@@ -1,17 +1,16 @@
 package snakegame;
 
-import com.sun.tools.javac.Main;
 import java.awt.Dimension;
+import java.awt.FontFormatException;
 import java.awt.Toolkit;
 import java.io.IOException;
-import javax.swing.JFrame;
 import javax.xml.parsers.ParserConfigurationException;
 import jplay.Window;
 import org.xml.sax.SAXException;
 
-public class SnakeGame extends JFrame {
+public class SnakeGame extends Constants {
 
-    public static void main(String[] args) throws SAXException, IOException, ParserConfigurationException {
+    public static void main(String[] args) throws SAXException, IOException, ParserConfigurationException, FontFormatException {
         // i will really need explain??
 
         // get current screen resolution
@@ -21,7 +20,7 @@ public class SnakeGame extends JFrame {
         Window gameWindow = new Window(screenSize.width, screenSize.height);
 
         // set custom mouse cursor
-        gameWindow.setCursor(gameWindow.createCustomCursor(Constants.SPRITES + "cursor.png"));
+        gameWindow.setCursor(gameWindow.createCustomCursor(DIR_SPRITES + "cursor.png"));
 
         Menu menu = new Menu(gameWindow);
         menu.run();

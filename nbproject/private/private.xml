@@ -3,13 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/william/Documentos/GitHub/Snake-Game/src/snakegame/Label.java</file>
             <file>file:/home/william/Documentos/GitHub/Snake-Game/src/snakegame/SnakeGame.java</file>
+            <file>file:/home/william/Documentos/GitHub/Snake-Game/src/snakegame/HUD.java</file>
+            <file>file:/home/william/Documentos/GitHub/Snake-Game/src/snakegame/Snake.java</file>
+            <file>file:/home/william/Documentos/GitHub/Snake-Game/src/snakegame/MenuInGame.java</file>
+            <file>file:/home/william/Documentos/GitHub/Snake-Game/src/snakegame/Constants.java</file>
+            <file>file:/home/william/Documentos/GitHub/Snake-Game/src/snakegame/Menu.java</file>
+            <file>file:/home/william/Documentos/GitHub/Snake-Game/resources/data/ranking.xml</file>
+            <file>file:/home/william/Documentos/GitHub/Snake-Game/src/snakegame/Label.java</file>
             <file>file:/home/william/Documentos/GitHub/Snake-Game/src/snakegame/Game.java</file>
             <file>file:/home/william/Documentos/GitHub/Snake-Game/src/snakegame/Grid.java</file>
-            <file>file:/home/william/Documentos/GitHub/Snake-Game/src/snakegame/Snake.java</file>
             <file>file:/home/william/Documentos/GitHub/Snake-Game/src/snakegame/GamePanel.java</file>
-            <file>file:/home/william/Documentos/GitHub/Snake-Game/src/snakegame/Menu.java</file>
             <file>file:/home/william/Documentos/GitHub/Snake-Game/src/snakegame/Food.java</file>
             <file>file:/home/william/Documentos/GitHub/Snake-Game/src/snakegame/Button.java</file>
         </group>

@@ -8,6 +8,8 @@ import jplay.Window;
 
 public class Grid {
 
+    private Window gameWindow;
+    private int unitSize;
     private Point gridSize;
     private final Color gridColor;
 
@@ -21,7 +23,9 @@ public class Grid {
         this.gridSize = gridSize;
     }
 
-    public Grid(Point gridSize, String imagePath, Color gridColor) {
+    public Grid(Window gameWindow, int unitSize, Point gridSize, String imagePath, Color gridColor) {
+        this.gameWindow = gameWindow;
+        this.unitSize = unitSize;
         this.gridSize = gridSize;
         gridUnit = new GameImage(imagePath);
         this.gridColor = gridColor;
@@ -48,7 +52,7 @@ public class Grid {
         return graficos;
     }
 
-    public void draw(Window gameWindow, int unitSize) {
+    public void draw() {
 
         gridUnit.width = unitSize;
         gridUnit.height = unitSize;

@@ -8,6 +8,9 @@ import jplay.Window;
 
 public class Food {
 
+    private final Window gameWindow;
+    private final Point gridSize;
+    private final int unitSize;
     private GameImage food;
     private Point foodPosition;
 
@@ -15,7 +18,10 @@ public class Food {
         return foodPosition;
     }
 
-    public Food(Point initialPos, String imagePath) {
+    public Food(Window gameWindow, Point gridSize, int unitSize, Point initialPos, String imagePath) {
+        this.gameWindow = gameWindow;
+        this.gridSize = gridSize;
+        this.unitSize = unitSize;
         foodPosition = initialPos;
         food = new GameImage(imagePath);
     }
@@ -41,7 +47,7 @@ public class Food {
         foodPosition = possiblePosition;
     }
 
-    void draw(Window gameWindow, Point gridSize, int unitSize) {
+    void draw() {
         food.width = unitSize;
         food.height = unitSize;
         food.x = ((gameWindow.getWidth() / 2 - (gridSize.x * unitSize))) + (foodPosition.x * unitSize);
