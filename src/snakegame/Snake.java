@@ -1,27 +1,35 @@
 package snakegame;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
+import jplay.GameImage;
+import jplay.Keyboard;
+import jplay.Window;
 
 public class Snake {
 
+    private Window gameWindow;
+    private Point gridSize;
+    private int unitSize;
     private boolean alive;
     private final List<Point> segments;
     private int direction;
-    private final Color colorAlive;
-    private final Color colorDie;
     private boolean keyPressed;
+    private GameImage snake;
+    private boolean pause;
+
+    public boolean isPause() {
+        return pause;
+    }
 
     public List<Point> getSegments() {
         return segments;
     }
 
-    public void addSegments(Point p) {
-        segments.add(p);
+    public void addSegments(int x, int y) {
+        segments.add(new Point(x, y));
     }
 
     public boolean isAlive() {
@@ -32,10 +40,12 @@ public class Snake {
         return keyPressed;
     }
 
-    public Snake(int direction, Color alive, Color die) {
+    public Snake(Window gameWindow, Point gridSize, int unitSize, int direction, String imagePath) {
+        this.gameWindow = gameWindow;
+        this.gridSize = gridSize;
+        this.unitSize = unitSize;
         this.direction = direction;
-        colorAlive = alive;
-        colorDie = die;
+        snake = new GameImage(imagePath);
         segments = new ArrayList<>();
         keyPressed = false;
         this.alive = true;
@@ -44,38 +54,40 @@ public class Snake {
     public void move(Point gridSize) {
         Point newPos;
         if (alive) {
-            switch (direction) {
-                case Constants.LEFT:
-                    if (segments.get(0).x == 0) {
-                        newPos = new Point(gridSize.x - 1, segments.get(0).y);
-                    } else {
-                        newPos = new Point(segments.get(0).x - 1, segments.get(0).y);
-                    }
-                    break;
-                case Constants.RIGHT:
-                    if (segments.get(0).x == (gridSize.x - 1)) {
-                        newPos = new Point(0, segments.get(0).y);
-                    } else {
-                        newPos = new Point(segments.get(0).x + 1, segments.get(0).y);
-                    }
-                    break;
-                case Constants.UP:
-                    if (segments.get(0).y == 0) {
-                        newPos = new Point(segments.get(0).x, gridSize.y - 1);
-                    } else {
-                        newPos = new Point(segments.get(0).x, segments.get(0).y - 1);
-                    }
-                    break;
-                default:
-                    if (segments.get(0).y == (gridSize.y - 1)) {
-                        newPos = new Point(segments.get(0).x, 0);
-                    } else {
-                        newPos = new Point(segments.get(0).x, segments.get(0).y + 1);
-                    }
-                    break;
+            if (!pause) {
+                switch (direction) {
+                    case Constants.LEFT:
+                        if (segments.get(0).x == 0) {
+                            newPos = new Point(gridSize.x - 1, segments.get(0).y);
+                        } else {
+                            newPos = new Point(segments.get(0).x - 1, segments.get(0).y);
+                        }
+                        break;
+                    case Constants.RIGHT:
+                        if (segments.get(0).x == (gridSize.x - 1)) {
+                            newPos = new Point(0, segments.get(0).y);
+                        } else {
+                            newPos = new Point(segments.get(0).x + 1, segments.get(0).y);
+                        }
+                        break;
+                    case Constants.UP:
+                        if (segments.get(0).y == 0) {
+                            newPos = new Point(segments.get(0).x, gridSize.y - 1);
+                        } else {
+                            newPos = new Point(segments.get(0).x, segments.get(0).y - 1);
+                        }
+                        break;
+                    default:
+                        if (segments.get(0).y == (gridSize.y - 1)) {
+                            newPos = new Point(segments.get(0).x, 0);
+                        } else {
+                            newPos = new Point(segments.get(0).x, segments.get(0).y + 1);
+                        }
+                        break;
+                }
+                segments.remove(segments.size() - 1);
+                segments.add(0, newPos);
             }
-            segments.remove(segments.size() - 1);
-            segments.add(0, newPos);
         }
         checkSelfCollision();
         keyPressed = false;
@@ -125,7 +137,7 @@ public class Snake {
         }
     }
 
-    public void keyPressed(KeyEvent key) {
+    /*public void keyPressed(KeyEvent key) {
 
         int code = key.getKeyCode();
 
@@ -152,46 +164,60 @@ public class Snake {
                 direction = Constants.RIGHT;
             }
         }
+
+    }*/
+
+    public void pauseOrPlay() {
+        if (pause) {
+            pause = false;
+        } else {
+            pause = true;
+        }
+    }
+
+    public void keyboardActions(Keyboard gameKeyboard) {
+        gameKeyboard.addKey(KeyEvent.VK_W);
+
+        if (gameKeyboard.keyDown(KeyEvent.VK_P)) {
+            pauseOrPlay();
+        }
+
+        if (gameKeyboard.keyDown(Keyboard.UP_KEY) || gameKeyboard.keyDown(KeyEvent.VK_W)) {
+            if (direction != Constants.DOWN) {
+                direction = Constants.UP;
+            }
+        }
+
+        if (gameKeyboard.keyDown(Keyboard.DOWN_KEY)) {
+            if (direction != Constants.UP) {
+                direction = Constants.DOWN;
+            }
+        }
+
+        if (gameKeyboard.keyDown(Keyboard.LEFT_KEY)) {
+            if (direction != Constants.RIGHT) {
+                direction = Constants.LEFT;
+            }
+        }
+
+        if (gameKeyboard.keyDown(Keyboard.RIGHT_KEY)) {
+            if (direction != Constants.LEFT) {
+                direction = Constants.RIGHT;
+            }
+        }
         keyPressed = true;
     }
 
-    public Graphics2D paint(Graphics2D g, Point screenSize, Point gridSize, int unitSize) {
-        Graphics2D graficos = (Graphics2D) g;
-        if (alive) {
-            graficos.setColor(colorAlive);
+    public void draw() {
 
-            for (int i = 0; i < segments.size(); i++) {
+        snake.width = unitSize;
+        snake.height = unitSize;
 
-                graficos.setColor(colorAlive);
-                graficos.fillRect(
-                        ((screenSize.x - (gridSize.x * unitSize)) / 2) + (segments.get(i).x * unitSize),
-                        ((screenSize.y - (gridSize.y * unitSize)) / 2) + (segments.get(i).y * unitSize),
-                        unitSize,
-                        unitSize);
-                graficos.setColor(new Color(137, 151, 116));
-                graficos.fillRect(
-                        ((screenSize.x - (gridSize.x * unitSize)) / 2) + (segments.get(i).x * unitSize) + 1,
-                        ((screenSize.y - (gridSize.y * unitSize)) / 2) + (segments.get(i).y * unitSize) + 1,
-                        unitSize - 2,
-                        unitSize - 2);
-                graficos.setColor(colorAlive);
-                graficos.fillRect(
-                        ((screenSize.x - (gridSize.x * unitSize)) / 2) + (segments.get(i).x * unitSize) + 3,
-                        ((screenSize.y - (gridSize.y * unitSize)) / 2) + (segments.get(i).y * unitSize) + 3,
-                        unitSize - 6,
-                        unitSize - 6);
-            }
-        } else {
-            graficos.setColor(colorDie);
-            for (int i = 0; i < segments.size(); i++) {
-                graficos.drawRect(
-                        ((screenSize.x - (gridSize.x * unitSize)) / 2) + (segments.get(i).x * unitSize) + 7,
-                        ((screenSize.y - (gridSize.y * unitSize)) / 2) + (segments.get(i).y * unitSize) + 7,
-                        unitSize - 14,
-                        unitSize - 14);
-            }
+        for (int i = 0; i < segments.size(); i++) {
+            snake.x = ((gameWindow.getWidth() / 2 - (gridSize.x * unitSize))) + (segments.get(i).x * unitSize);
+            snake.y = ((gameWindow.getHeight() - (gridSize.y * unitSize)) / 2) + (segments.get(i).y * unitSize);
+            snake.draw();
         }
-        return graficos;
     }
 
 }

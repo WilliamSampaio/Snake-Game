@@ -3,11 +3,17 @@ package snakegame;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import jplay.GameImage;
+import jplay.Window;
 
 public class Grid {
 
+    private Window gameWindow;
+    private int unitSize;
     private Point gridSize;
     private final Color gridColor;
+
+    private GameImage gridUnit;
 
     public Point getGridSize() {
         return gridSize;
@@ -17,8 +23,11 @@ public class Grid {
         this.gridSize = gridSize;
     }
 
-    public Grid(Point gridSize, Color gridColor) {
+    public Grid(Window gameWindow, int unitSize, Point gridSize, String imagePath, Color gridColor) {
+        this.gameWindow = gameWindow;
+        this.unitSize = unitSize;
         this.gridSize = gridSize;
+        gridUnit = new GameImage(imagePath);
         this.gridColor = gridColor;
     }
 
@@ -41,6 +50,35 @@ public class Grid {
                 gridSize.y * unitSize);
 
         return graficos;
+    }
+
+    public void draw() {
+
+        gridUnit.width = unitSize;
+        gridUnit.height = unitSize;
+
+        gameWindow.getGameGraphics().setColor(Color.BLACK);
+        gameWindow.getGameGraphics().fillRect(
+                ((gameWindow.getWidth() / 2 - (gridSize.x * unitSize))) - 1,
+                ((gameWindow.getHeight() - (gridSize.y * unitSize)) / 2) - 1,
+                (gridSize.x * unitSize) + 2,
+                (gridSize.y * unitSize) + 2);
+
+        gameWindow.getGameGraphics().setColor(gridColor);
+        gameWindow.getGameGraphics().fillRect(
+                (gameWindow.getWidth() / 2 - (gridSize.x * unitSize)),
+                (gameWindow.getHeight() - (gridSize.y * unitSize)) / 2,
+                gridSize.x * unitSize,
+                gridSize.y * unitSize);
+
+        for (int x = 0; x < gridSize.x; x++) {
+            for (int y = 0; y < gridSize.y; y++) {
+                gridUnit.x = ((gameWindow.getWidth() / 2 - (gridSize.x * unitSize))) + x * unitSize;
+                gridUnit.y = ((gameWindow.getHeight() - (gridSize.y * unitSize)) / 2) + y * unitSize;
+                gridUnit.draw();
+            }
+        }
+
     }
 
 }

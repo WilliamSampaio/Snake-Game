@@ -1,196 +1,340 @@
 package snakegame;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.FontFormatException;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.JPanel;
-import javax.swing.Timer;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import jplay.Keyboard;
+import jplay.Window;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
-/**
- *
- * @author William Benjamim Menezes Sampaio
- */
-public final class Game extends JPanel implements ActionListener {
+public final class Game extends Constants {
 
-    private Menu menu;
+    private Window gameWindow;
     private Grid grid;
-    private Snake snake;
     private Food food;
-    private Timer timer;
-    private int FPS = 50;
-    private Point screenSize;
-    private int unitSize;
-    private int delay = 250;
-    private boolean pause;
-    private int gameStatus;
-    private MusicPlayer musicPlayer;
+    private Snake snake;
+    private HUD hud;
 
-    long start = System.nanoTime();
-    long finish;
-    long timeElapsed = finish - start;
+    private int UNIT_SIZE;
+    private boolean MUSIC_STATUS;
 
-    /**
-     * Snake game in Java
-     *
-     * @param screenSize Current resolution of the screen
-     */
-    public Game(Point screenSize) {
+    private int GAME_STATUS;
+    private int SCORE;
+    private int LEVEL;
+    private int FOOD_COUNT;
 
-        setFocusable(true);
-        setDoubleBuffered(true);
-        addKeyListener(new KeyBoardAdapter());
-        this.screenSize = screenSize;
-        unitSize = screenSize.y / 50;
+    private Keyboard gameKeyboard;
 
-        menu = new Menu(screenSize, unitSize);
+    private Button pauseBtn;
+    private Button musicBtn;
 
-        grid = new Grid(new Point(30, 40), new Color(137, 151, 116));
-        snake = new Snake(Constants.RIGHT, Color.BLACK, Color.DARK_GRAY);
-        snake.addSegments(new Point(2, 0));
-        snake.addSegments(new Point(1, 0));
-        snake.addSegments(new Point(0, 0));
+    private int DELAY;
+    private Font menuFont;
 
-        food = new Food(new Point(grid.getGridSize().x / 2, grid.getGridSize().y / 2));
-        pause = false;
+    private MenuInGame menuInGame;
 
-        gameStatus = Constants.IN_MENU;
+    private Document ranking;
+    private long previusTime;
+    private long timer;
 
-        musicPlayer = new MusicPlayer(screenSize);
-        //musicPlayer.playMusic();
-        /*System.out.println(musicPlayer.getPlayList().getComponent(1).getName());
-        System.out.println(this.getName());*/
+    public Game(Window gameWindow) {
+        this.gameWindow = gameWindow;
+    }
 
-        Thread thread = new Thread(musicPlayer);
-        thread.start();
-
-        //musicPlayer.playMusic();
-        timer = new Timer(0, this);
-        timer.start();
+    public void run() throws SAXException, IOException, ParserConfigurationException, FontFormatException {
+        // call load function that load all files and other things referred the menu
+        load();
+        // menu loop
+        while (true) {
+            // update function, i really explain it?
+            update();
+            // draw in the screen
+            draw();
+        }
 
     }
 
-    /**
-     *
-     * @param arg0
-     */
-    @Override
-    public void actionPerformed(ActionEvent arg0) {
+    private void load() throws SAXException, IOException, ParserConfigurationException, FontFormatException {
+        // game status receive in game
+        GAME_STATUS = IN_GAME;
+        // previusTime time receive the game window elapsed time
+        previusTime = gameWindow.timeElapsed();
+        // timer receive 0
+        timer = 0;
+        // set the game keyboard
+        gameKeyboard = gameWindow.getKeyboard();
+        // set the unit size
+        UNIT_SIZE = gameWindow.getHeight() / 30;
+        // initialize the grid object
+        grid = new Grid(gameWindow, UNIT_SIZE, new Point(15, 20), DIR_SPRITES + "unit_off.png", new Color(137, 151, 116));
+        // initialize the food object
+        food = new Food(gameWindow, grid.getGridSize(), UNIT_SIZE, new Point(grid.getGridSize().x / 2, grid.getGridSize().y / 2), DIR_SPRITES + "unit_on.png");
+        // initialize the snake object and add a segment
+        snake = new Snake(gameWindow, grid.getGridSize(), UNIT_SIZE, RIGHT, DIR_SPRITES + "unit_on.png");
+        snake.addSegments(grid.getGridSize().x / 2, grid.getGridSize().y / 2);
+        // initialize the HeadsUp display
+        menuFont = Font.createFont(Font.TRUETYPE_FONT, new File(DIR_FONTS + "digital-7.ttf")).deriveFont((float) UNIT_SIZE * 2).deriveFont(Font.PLAIN);
+        hud = new HUD(gameWindow, grid, UNIT_SIZE, menuFont, Color.BLACK);
+        MUSIC_STATUS = true;
 
-        start = finish;
-        finish = System.nanoTime();
+        DELAY = 750;
 
-        timeElapsed = finish - start;
-        
-        if(timeElapsed / 1000000 > 150){
-            timeElapsed = 150 * 1000000;
-        }
+        SCORE = 0;
+        LEVEL = 1;
+        FOOD_COUNT = 0;
 
-        System.out.println(timeElapsed);
+        pauseBtn = new Button(DIR_SPRITES + "pause_btn.png", gameWindow);
+        pauseBtn.setX((gameWindow.getWidth() / 4) * 3);
+        pauseBtn.setY((gameWindow.getHeight() - grid.getGridSize().y * UNIT_SIZE) / 2 + (grid.getGridSize().y * UNIT_SIZE) - pauseBtn.getHeight());
+        pauseBtn.setWidth(3 * UNIT_SIZE);
+        pauseBtn.setHeight(3 * UNIT_SIZE);
 
-        if (gameStatus == Constants.IN_MENU) {
+        musicBtn = new Button(DIR_SPRITES + "music_btn.png", gameWindow);
+        musicBtn.setX(((gameWindow.getWidth() / 4) * 3) - 4 * UNIT_SIZE);
+        musicBtn.setY((gameWindow.getHeight() - grid.getGridSize().y * UNIT_SIZE) / 2 + (grid.getGridSize().y * UNIT_SIZE) - musicBtn.getHeight());
+        musicBtn.setWidth(3 * UNIT_SIZE);
+        musicBtn.setHeight(3 * UNIT_SIZE);
 
-            switch (menu.getSelectedOption()) {
-                case 1:
-                    gameStatus = Constants.IN_GAME;
-                    break;
-                case 2:
-                    // in comming!
-                    break;
-                case 3:
-                    System.exit(0);
-                    break;
-            }
-        }
+        menuInGame = new MenuInGame(gameWindow, DIR_SPRITES + "menu_ingame.png", new Color(137, 151, 116));
 
-        if (gameStatus == Constants.IN_GAME) {
-            if (snake.getSegments().get(0).equals(food.getPosition())) {
-                snake.eat(grid.getGridSize());
-                food.newPosition(grid.getGridSize(), snake.getSegments());
-            } else {
-                if (snake.isAlive()) {
-                    snake.move(grid.getGridSize());
-                }
-            }
-        }
+        /*DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        ranking = builder.parse(DIR_DATA + "ranking.xml");
 
-        repaint();
+        NodeList names = this.ranking.getElementsByTagName("name");
+        Element name = (Element) names.item(0);
+
+        NodeList scores = this.ranking.getElementsByTagName("SCORE");
+        Element SCORE = (Element) scores.item(0);
+
+        System.out.println("NAME: " + name.getTextContent());
+        System.out.println("SCORE: " + SCORE.getTextContent());*/
     }
 
-    /**
-     *
-     * @param g
-     */
-    @Override
-    public void paint(Graphics g) {
+    private void update() throws SAXException, IOException, ParserConfigurationException, FontFormatException {
 
-        Graphics2D graficos = (Graphics2D) g;
+        if (GAME_STATUS == IN_GAME) {
 
-        graficos.setColor(new Color(137, 151, 116));
-        graficos.fillRect(0, 0, screenSize.x, screenSize.y);
+            long currentTime = gameWindow.timeElapsed();
+            timer += currentTime - previusTime;
+            previusTime = currentTime;
 
-        if (gameStatus == Constants.IN_MENU) {
-            menu.paint(graficos, screenSize, unitSize);
-        }
+            if (timer >= DELAY) {
 
-        if (gameStatus == Constants.IN_GAME) {
-            grid.paint(graficos, screenSize, unitSize);
-            food.paint(graficos, screenSize, grid.getGridSize(), unitSize);
-            snake.paint(graficos, screenSize, grid.getGridSize(), unitSize);
-        }
+                timer -= DELAY;
 
-        try {
-            musicPlayer.paint(graficos, screenSize, unitSize);
-        } catch (FontFormatException ex) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
-        }
+                if (gameKeyboard.keyDown(Keyboard.ESCAPE_KEY)) {
 
-        g.dispose();
+                    GAME_STATUS = IN_GAME_MENU;
+                    if (!snake.isPause()) {
+                        snake.pauseOrPlay();
+                    }
 
-    }
-
-    private class KeyBoardAdapter extends KeyAdapter {
-
-        @Override
-        public void keyPressed(KeyEvent e) {
-
-            musicPlayer.keyPressed(e);
-
-            if (gameStatus == Constants.IN_MENU) {
-                menu.keyPressed(e);
-            }
-
-            if (gameStatus == Constants.IN_GAME) {
-
-                if (!snake.isKeyPressed()) {
-                    snake.keyPressed(e);
                 }
 
-                if (e.getKeyCode() == KeyEvent.VK_P) {
-                    if (!pause) {
-                        timer.stop();
-                        pause = true;
+                snake.keyboardActions(gameKeyboard);
+
+                if (snake.getSegments().get(0).equals(food.getPosition())) {
+                    snake.eat(grid.getGridSize());
+                    food.newPosition(grid.getGridSize(), snake.getSegments());
+                    SCORE += 100;
+                    //DELAY -= 50;
+                    if (FOOD_COUNT == 9) {
+                        LEVEL++;
+                        FOOD_COUNT = 0;
                     } else {
-                        timer.start();
-                        pause = false;
+                        FOOD_COUNT++;
+                    }
+                } else {
+                    if (snake.isAlive()) {
+                        snake.move(grid.getGridSize());
                     }
                 }
+
+                if (gameKeyboard.keyDown(Keyboard.ENTER_KEY) && !snake.isAlive()) {
+                    run();
+                }
+
+                if (gameKeyboard.keyDown(KeyEvent.VK_M)) {
+                    if (MUSIC_STATUS) {
+                        MUSIC_STATUS = false;
+                    } else {
+                        MUSIC_STATUS = true;
+                    }
+                }
+
             }
 
-            if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                System.exit(0);
+        }
+
+        if (GAME_STATUS == IN_GAME_MENU) {
+            
+            if (gameKeyboard.keyDown(Keyboard.ESCAPE_KEY)) {
+                
+                GAME_STATUS = IN_GAME;
+                snake.pauseOrPlay();
+                previusTime = gameWindow.timeElapsed();
+                
+            }
+
+            menuInGameKeyboardActions();
+            menuInGameMouseActions();
+        }
+
+        hud.update(SCORE, -1, LEVEL);
+        gameWindow.update();
+
+    }
+
+    private void draw() {
+        // clear the window with especifc color
+        gameWindow.clear(new Color(137, 151, 116));
+        // draw the grid, food, snake and hud
+        grid.draw();
+        food.draw();
+        snake.draw();
+        hud.draw();
+        // if music is true
+        if (MUSIC_STATUS) {
+            // draw music icon
+            musicBtn.draw();
+        } else {
+            // draw music icon
+            musicBtn.drawSelected();
+        }
+        // if snake is paused
+        if (snake.isPause()) {
+            // draw pause icon
+            pauseBtn.draw();
+        } else {
+            // draw pause icon
+            pauseBtn.drawSelected();
+        }
+        // if game status is in game menu
+        if (GAME_STATUS == IN_GAME_MENU) {
+            // draw the in game menu
+            menuInGame.draw();
+        }
+
+    }
+
+    public void menuInGameKeyboardActions() throws SAXException, IOException, ParserConfigurationException, FontFormatException {
+        // if ENTER was pressed verify which option is selected and run
+        if (gameKeyboard.keyDown(Keyboard.ENTER_KEY)) {
+            switch (menuInGame.option) {
+                case 0:
+                    GAME_STATUS = IN_GAME;
+                    snake.pauseOrPlay();
+                    previusTime = gameWindow.timeElapsed();
+                    break;
+                case 1:
+                    if (MUSIC_STATUS) {
+                        MUSIC_STATUS = false;
+                    } else {
+                        MUSIC_STATUS = true;
+                    }
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    Menu menu = new Menu(gameWindow);
+                    menu.run();
+                    break;
+                case 4:
+                    gameWindow.exit();
+                    break;
             }
         }
+
+        // if W key was pressed option receive the back option
+        if (gameKeyboard.keyDown(KeyEvent.VK_W)) {
+            if (menuInGame.option == 0) {
+                menuInGame.option = menuInGame.options.size() - 1;
+            } else {
+                menuInGame.option--;
+            }
+        }
+
+        // if UP key was pressed option receive the back option
+        if (gameKeyboard.keyDown(Keyboard.UP_KEY)) {
+            if (menuInGame.option == 0) {
+                menuInGame.option = menuInGame.options.size() - 1;
+            } else {
+                menuInGame.option--;
+            }
+        }
+
+        // if S key was pressed option receive next option
+        if (gameKeyboard.keyDown(KeyEvent.VK_S)) {
+            if (menuInGame.option == menuInGame.options.size() - 1) {
+                menuInGame.option = 0;
+            } else {
+                menuInGame.option++;
+            }
+        }
+
+        // if DOWN key was pressed option receive next option
+        if (gameKeyboard.keyDown(Keyboard.DOWN_KEY)) {
+            if (menuInGame.option == menuInGame.options.size() - 1) {
+                menuInGame.option = 0;
+            } else {
+                menuInGame.option++;
+            }
+        }
+
+        // if ESC key was pressed independent of the option
+        if (gameKeyboard.keyDown(Keyboard.ESCAPE_KEY)) {
+            //gameWindow.exit();
+        }
+    }
+
+    public void menuInGameMouseActions() throws SAXException, IOException, ParserConfigurationException, FontFormatException {
+        // loop to verify if some option is mouse cursor over. if on, option receive index
+        for (int i = 0; i < menuInGame.options.size(); i++) {
+            if (menuInGame.options.get(i).isMouseOn()) {
+                menuInGame.option = i;
+            }
+        }
+
+        // verify if mouse left button has pressed
+        if (gameWindow.getMouse().isLeftButtonPressed()) {
+            // loop to verify if left mouse has pressed over some option
+            for (int i = 0; i < menuInGame.options.size(); i++) {
+                switch (menuInGame.option) {
+                    case 0:
+                        GAME_STATUS = IN_GAME;
+                        snake.pauseOrPlay();
+                        break;
+                    case 1:
+                        if (MUSIC_STATUS) {
+                            MUSIC_STATUS = false;
+                        } else {
+                            MUSIC_STATUS = true;
+                        }
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        Menu menu = new Menu(gameWindow);
+                        menu.run();
+                        break;
+                    case 4:
+                        gameWindow.exit();
+                        break;
+                } // end switch
+            } // end for
+        } // end if
+
     }
 
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+Here comes the text of your license
+Each line should be prefixed with 
+-->
+
+<ranking>
+    <size>1</size>
+    <player>
+        <name>Bonner</name>
+        <score>9999</score>
+    </player>
+</ranking>
