@@ -17,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
@@ -63,10 +64,9 @@ public final class Game extends Constants {
     private long previusTime;
     private long timer;
 
-    private List<String> playerNames;
-    private List<Integer> highScores;
-
-    private Ranking ranking2;
+    /*private List<String> playerNames;
+    private List<Integer> highScores;*/
+    //private Ranking ranking2;
     private RankingScreen ranking1;
     private List<RankElement> rankingList;
 
@@ -105,6 +105,8 @@ public final class Game extends Constants {
         // initialize the snake object and add a segment
         snake = new Snake(gameWindow, grid.getGridSize(), UNIT_SIZE, RIGHT, DIR_SPRITES + "unit_on.png");
         snake.addSegments(grid.getGridSize().x / 2, grid.getGridSize().y / 2);
+        snake.addSegments(grid.getGridSize().x / 2 - 1, grid.getGridSize().y / 2);
+        snake.addSegments(grid.getGridSize().x / 2 - 2, grid.getGridSize().y / 2);
         // initialize the HeadsUp display
         menuFont = Font.createFont(Font.TRUETYPE_FONT, new File(DIR_FONTS + "digital-7.ttf")).deriveFont((float) UNIT_SIZE * 2).deriveFont(Font.PLAIN);
         hud = new HUD(gameWindow, grid, UNIT_SIZE, menuFont, Color.BLACK);
@@ -133,15 +135,18 @@ public final class Game extends Constants {
 
         ranking1 = new RankingScreen(gameWindow, DIR_SPRITES + "ranking.png");
 
-        playerNames = new ArrayList<>();
+        /*playerNames = new ArrayList<>();
         highScores = new ArrayList<>();
 
-        ranking2 = new Ranking(DIR_DATA + "ranking.xml");
-
+        ranking2 = new Ranking(DIR_DATA + "ranking.xml");*/
         rankingList = new Ranking(DIR_DATA + "ranking.xml").getRankingList();
+        if (rankingList.size() != 0) {
+            HI_SCORE = Integer.parseInt(rankingList.get(0).getPlayerScore());
+        } else {
+            HI_SCORE = 0;
+        }
 
-        HI_SCORE = Integer.parseInt(rankingList.get(0).getPlayerScore());
-
+        //HI_SCORE = Integer.parseInt(rankingList.get(0).getPlayerScore());
         /*// read the ranking.xml file
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -248,15 +253,21 @@ public final class Game extends Constants {
             ranking = builder.parse(DIR_DATA + "ranking.xml");
             Node rootTag = ranking.getFirstChild();
 
-            if (playerNames.size() >= 1) {
+            if (rankingList.size() >= 1) {
 
-                if (highScores.get(highScores.size() - 1) < SCORE) {
+                if (Integer.parseInt(rankingList.get(0).getPlayerScore()) < SCORE) {
                     HI_SCORE = SCORE;
-                    String name = JOptionPane.showInputDialog(gameWindow, "PLAYER NAME:", null, JOptionPane.PLAIN_MESSAGE);
-                    if (name == null) {
-                        Menu menu = new Menu(gameWindow);
-                        menu.run();
-                    }
+                    String name;
+                    do {
+                        name = JOptionPane.showInputDialog(gameWindow, "PLAYER NAME:", null, JOptionPane.PLAIN_MESSAGE);
+                        if (name == null) {
+                            Menu menu = new Menu(gameWindow);
+                            menu.run();
+                        } else if (name.length() > 10) {
+                            JOptionPane.showMessageDialog(gameWindow, "NAME TOO LONG! PLEASE ENTER A NAME OF UP TO 10 CHARACTERS.", null, JOptionPane.ERROR_MESSAGE);
+                        }
+                    } while (name.length() > 10);
+                    name = name.toUpperCase();
                     String newHighScore = Integer.toString(SCORE);
 
                     Element playerTag = ranking.createElement("player");
@@ -276,14 +287,20 @@ public final class Game extends Constants {
 
                 }
 
-            } else if (playerNames.size() == 0) {
+            } else if (rankingList.size() == 0) {
 
                 HI_SCORE = SCORE;
-                String name = JOptionPane.showInputDialog(gameWindow, "PLAYER NAME:", null, JOptionPane.PLAIN_MESSAGE);
-                if (name == null) {
-                    Menu menu = new Menu(gameWindow);
-                    menu.run();
-                }
+                String name;
+                do {
+                    name = JOptionPane.showInputDialog(gameWindow, "PLAYER NAME:", null, JOptionPane.PLAIN_MESSAGE);
+                    if (name == null) {
+                        Menu menu = new Menu(gameWindow);
+                        menu.run();
+                    } else if (name.length() > 10) {
+                        JOptionPane.showMessageDialog(gameWindow, "NAME TOO LONG! PLEASE ENTER A NAME OF UP TO 10 CHARACTERS.", null, JOptionPane.ERROR_MESSAGE);
+                    }
+                } while (name.length() > 10);
+                name = name.toUpperCase();
                 String newHighScore = Integer.toString(SCORE);
 
                 Element playerTag = ranking.createElement("player");
@@ -305,6 +322,11 @@ public final class Game extends Constants {
 
             try {
                 Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+                transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+                /*transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "ranking.dtd");
+                //transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");*/
                 transformer.transform(new DOMSource(rootTag), new StreamResult(new FileOutputStream(DIR_DATA + "ranking.xml")));
             } catch (TransformerConfigurationException ex) {
                 Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
