@@ -8,17 +8,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import jplay.GameImage;
 import jplay.Keyboard;
 import jplay.Mouse;
 import jplay.Window;
 import org.xml.sax.SAXException;
+import snakegame.core.OptionPane;
 
 /**
  *
- * @author William Benjamim Menezes Sampaio
- * @link    https://github.com/WilliamSampaio
- * @link    williambenjamimms97@gmail.com
+ * @author William Benjamim Menezes Sampaio <a href="https://github.com/WilliamSampaio">| GitHub |</a>
  */
 public class Menu extends Constants {
 
@@ -38,7 +38,7 @@ public class Menu extends Constants {
         this.gameWindow = gameWindow;
     }
 
-    public void run() throws SAXException, IOException, ParserConfigurationException, FontFormatException {
+    public void run() throws SAXException, IOException, ParserConfigurationException, FontFormatException, TransformerException {
         // call load function that load all files and other things referred the menu
         load();
 
@@ -90,7 +90,7 @@ public class Menu extends Constants {
         option = 0;
     }
 
-    private void update() throws SAXException, IOException, ParserConfigurationException, FontFormatException {
+    private void update() throws SAXException, IOException, ParserConfigurationException, FontFormatException, TransformerException {
         // detect all mouse actions
         mouseActions();
 
@@ -119,11 +119,7 @@ public class Menu extends Constants {
         }
     }
 
-    private void exit() {
-        gameWindow.exit();
-    }
-
-    private void mouseActions() throws SAXException, IOException, ParserConfigurationException, FontFormatException {
+    private void mouseActions() throws SAXException, IOException, ParserConfigurationException, FontFormatException, TransformerException {
         // loop to verify if some option is mouse cursor over. if on, option receive index
         for (int i = 0; i < options.size(); i++) {
             if (options.get(i).isMouseOn()) {
@@ -143,7 +139,9 @@ public class Menu extends Constants {
                         case 1:
                             break;
                         case 2:
-                            exit();
+                            if (OptionPane.exitConfirmation() == 0) {
+                                gameWindow.exit();
+                            }
                             break;
                     }
                 }
@@ -151,7 +149,7 @@ public class Menu extends Constants {
         }
     }
 
-    private void keyboardActions() throws SAXException, IOException, ParserConfigurationException, FontFormatException {
+    private void keyboardActions() throws SAXException, IOException, ParserConfigurationException, FontFormatException, TransformerException {
         // if ENTER was pressed verify which option is selected and run
         if (gameKeyboard.keyDown(Keyboard.ENTER_KEY)) {
             switch (option) {
@@ -161,7 +159,9 @@ public class Menu extends Constants {
                 case 1:
                     break;
                 case 2:
-                    exit();
+                    if (OptionPane.exitConfirmation() == 0) {
+                        gameWindow.exit();
+                    }
                     break;
             }
         }

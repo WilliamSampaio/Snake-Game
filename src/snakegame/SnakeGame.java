@@ -5,12 +5,13 @@ import java.awt.FontFormatException;
 import java.awt.Toolkit;
 import java.io.IOException;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
 import jplay.Window;
 import org.xml.sax.SAXException;
 
 public class SnakeGame extends Constants {
 
-    public static void main(String[] args) throws SAXException, IOException, ParserConfigurationException, FontFormatException {
+    public static void main(String[] args) throws SAXException, IOException, ParserConfigurationException, FontFormatException, TransformerException {
         // i will really need explain??
 
         // get current screen resolution

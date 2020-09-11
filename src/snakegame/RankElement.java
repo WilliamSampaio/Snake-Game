@@ -6,7 +6,7 @@ package snakegame;
 
 /**
  *
- * @author William Benjamim Menezes Sampaio <williambenjamimms97@gmail.com>
+ * @author William Benjamim Menezes Sampaio <a href="https://github.com/WilliamSampaio">| GitHub |</a>
  */
 public class RankElement {
 

@@ -32,7 +32,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 import org.xml.sax.SAXException;
+import snakegame.core.OptionPane;
 
+/**
+ *
+ * @author William Benjamim Menezes Sampaio
+ * <a href="https://github.com/WilliamSampaio">| GitHub |</a>
+ */
 public final class Game extends Constants {
 
     private Window gameWindow;
@@ -60,21 +66,32 @@ public final class Game extends Constants {
 
     private MenuInGame menuInGame;
 
-    private Document ranking;
+    //private Document ranking;
     private long previusTime;
     private long timer;
 
     /*private List<String> playerNames;
     private List<Integer> highScores;*/
-    //private Ranking ranking2;
+    private Ranking ranking;
     private RankingScreen ranking1;
     private List<RankElement> rankingList;
 
+    /**
+     *
+     * @param gameWindow rrrrr
+     */
     public Game(Window gameWindow) {
         this.gameWindow = gameWindow;
     }
 
-    public void run() throws SAXException, IOException, ParserConfigurationException, FontFormatException {
+    /**
+     *
+     * @throws SAXException
+     * @throws IOException
+     * @throws ParserConfigurationException
+     * @throws FontFormatException
+     */
+    public void run() throws SAXException, IOException, ParserConfigurationException, FontFormatException, TransformerConfigurationException, TransformerException {
         // call load function that load all files and other things referred the menu
         load();
         // menu loop
@@ -87,7 +104,7 @@ public final class Game extends Constants {
 
     }
 
-    private void load() throws SAXException, IOException, ParserConfigurationException, FontFormatException {
+    private void load() throws SAXException, IOException, ParserConfigurationException, FontFormatException, TransformerConfigurationException {
         // game status receive in game
         GAME_STATUS = IN_GAME;
         // previusTime time receive the game window elapsed time
@@ -136,10 +153,9 @@ public final class Game extends Constants {
         ranking1 = new RankingScreen(gameWindow, DIR_SPRITES + "ranking.png");
 
         /*playerNames = new ArrayList<>();
-        highScores = new ArrayList<>();
-
-        ranking2 = new Ranking(DIR_DATA + "ranking.xml");*/
-        rankingList = new Ranking(DIR_DATA + "ranking.xml").getRankingList();
+        highScores = new ArrayList<>();*/
+        ranking = new Ranking(DIR_DATA + "ranking.xml");
+        rankingList = ranking.getRankingList();
         if (rankingList.size() != 0) {
             HI_SCORE = Integer.parseInt(rankingList.get(0).getPlayerScore());
         } else {
@@ -178,7 +194,7 @@ public final class Game extends Constants {
         System.out.println("SCORE: " + SCORE.getTextContent());*/
     }
 
-    private void update() throws SAXException, IOException, ParserConfigurationException, FontFormatException {
+    private void update() throws SAXException, IOException, ParserConfigurationException, FontFormatException, TransformerException {
 
         if (GAME_STATUS == IN_GAME) {
 
@@ -247,7 +263,18 @@ public final class Game extends Constants {
 
         if (GAME_STATUS == IN_GAME_OVER) {
 
-            DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
+            int processScoreStatus = ranking.processScore(SCORE);
+
+            switch (processScoreStatus) {
+                case 0:
+                    new Game(gameWindow).run();
+                    break;
+                case 1:
+                    new Menu(gameWindow).run();
+                    break;
+            }
+
+            /*DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
             domFactory.setIgnoringComments(true);
             DocumentBuilder builder = domFactory.newDocumentBuilder();
             ranking = builder.parse(DIR_DATA + "ranking.xml");
@@ -259,12 +286,14 @@ public final class Game extends Constants {
                     HI_SCORE = SCORE;
                     String name;
                     do {
-                        name = JOptionPane.showInputDialog(gameWindow, "PLAYER NAME:", null, JOptionPane.PLAIN_MESSAGE);
+                        //name = JOptionPane.showInputDialog(gameWindow, "PLAYER NAME:", null, JOptionPane.PLAIN_MESSAGE);
+                        name = OptionPane.rankGetName();
                         if (name == null) {
                             Menu menu = new Menu(gameWindow);
                             menu.run();
                         } else if (name.length() > 10) {
-                            JOptionPane.showMessageDialog(gameWindow, "NAME TOO LONG! PLEASE ENTER A NAME OF UP TO 10 CHARACTERS.", null, JOptionPane.ERROR_MESSAGE);
+                            //JOptionPane.showMessageDialog(gameWindow, "NAME TOO LONG! PLEASE ENTER A NAME OF UP TO 10 CHARACTERS.", null, JOptionPane.ERROR_MESSAGE);
+                            OptionPane.rankLongNameErr();
                         }
                     } while (name.length() > 10);
                     name = name.toUpperCase();
@@ -292,12 +321,14 @@ public final class Game extends Constants {
                 HI_SCORE = SCORE;
                 String name;
                 do {
-                    name = JOptionPane.showInputDialog(gameWindow, "PLAYER NAME:", null, JOptionPane.PLAIN_MESSAGE);
+                    //name = JOptionPane.showInputDialog(gameWindow, "PLAYER NAME:", null, JOptionPane.PLAIN_MESSAGE);
+                    name = OptionPane.rankGetName();
                     if (name == null) {
                         Menu menu = new Menu(gameWindow);
                         menu.run();
                     } else if (name.length() > 10) {
-                        JOptionPane.showMessageDialog(gameWindow, "NAME TOO LONG! PLEASE ENTER A NAME OF UP TO 10 CHARACTERS.", null, JOptionPane.ERROR_MESSAGE);
+                        //JOptionPane.showMessageDialog(gameWindow, "NAME TOO LONG! PLEASE ENTER A NAME OF UP TO 10 CHARACTERS.", null, JOptionPane.ERROR_MESSAGE);
+                        OptionPane.rankLongNameErr();
                     }
                 } while (name.length() > 10);
                 name = name.toUpperCase();
@@ -325,8 +356,8 @@ public final class Game extends Constants {
                 transformer.setOutputProperty(OutputKeys.INDENT, "yes");
                 transformer.setOutputProperty(OutputKeys.METHOD, "xml");
                 transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-                /*transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "ranking.dtd");
-                //transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");*/
+                //transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, "ranking.dtd");
+                //transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
                 transformer.transform(new DOMSource(rootTag), new StreamResult(new FileOutputStream(DIR_DATA + "ranking.xml")));
             } catch (TransformerConfigurationException ex) {
                 Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
@@ -334,14 +365,13 @@ public final class Game extends Constants {
                 Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-            if (JOptionPane.showConfirmDialog(gameWindow, "PLAY AGAIN??", null, JOptionPane.YES_NO_OPTION) == 0) {
+            if (OptionPane.playAgain() == 0) {
                 previusTime = gameWindow.timeElapsed();
                 run();
             } else {
                 Menu menu = new Menu(gameWindow);
                 menu.run();
-            }
-
+            }*/
         }
 
         if (GAME_STATUS == IN_GAME_RANK) {
@@ -401,7 +431,14 @@ public final class Game extends Constants {
 
     }
 
-    public void menuInGameKeyboardActions() throws SAXException, IOException, ParserConfigurationException, FontFormatException {
+    /**
+     *
+     * @throws SAXException
+     * @throws IOException
+     * @throws ParserConfigurationException
+     * @throws FontFormatException
+     */
+    public void menuInGameKeyboardActions() throws SAXException, IOException, ParserConfigurationException, FontFormatException, TransformerException {
         // if ENTER was pressed verify which option is selected and run
         if (gameKeyboard.keyDown(Keyboard.ENTER_KEY)) {
             switch (menuInGame.option) {
@@ -425,7 +462,11 @@ public final class Game extends Constants {
                     menu.run();
                     break;
                 case 4:
-                    gameWindow.exit();
+                    if (OptionPane.exitConfirmation() == 0) {
+                        gameWindow.exit();
+                    } else {
+                        menuInGame.option = -1;
+                    }
                     break;
             }
         }
@@ -472,7 +513,14 @@ public final class Game extends Constants {
         }
     }
 
-    public void menuInGameMouseActions() throws SAXException, IOException, ParserConfigurationException, FontFormatException {
+    /**
+     *
+     * @throws SAXException
+     * @throws IOException
+     * @throws ParserConfigurationException
+     * @throws FontFormatException
+     */
+    public void menuInGameMouseActions() throws SAXException, IOException, ParserConfigurationException, FontFormatException, TransformerException {
         // loop to verify if some option is mouse cursor over. if on, option receive index
         for (int i = 0; i < menuInGame.options.size(); i++) {
             if (menuInGame.options.get(i).isMouseOn()) {
@@ -504,7 +552,11 @@ public final class Game extends Constants {
                         menu.run();
                         break;
                     case 4:
-                        gameWindow.exit();
+                        if (OptionPane.exitConfirmation() == 0) {
+                            gameWindow.exit();
+                        } else {
+                            menuInGame.option = -1;
+                        }
                         break;
                 } // end switch
             } // end for
